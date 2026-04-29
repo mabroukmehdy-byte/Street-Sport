@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+
+# Node
+node_modules/
+frontend/node_modules/
+
+# Build artifacts
+build/
+frontend/build/
+
+# Env
+.env
+backend/.env
+frontend/.env
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
