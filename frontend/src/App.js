@@ -528,6 +528,17 @@ function BackOffice({ open, onClose, data, setData }) {
     { value: 'training', label: 'Training' },
     { value: 'lifestyle', label: 'Lifestyle' },
   ]), []);
+  const productSubcategoryOptions = useMemo(() => {
+    const list = Object.values(data.nav || {}).flatMap((arr) => arr || []);
+    const seen = new Set();
+    return list
+      .map((x) => ({ value: slugify(x), label: x }))
+      .filter((o) => {
+        if (!o.value || seen.has(o.value)) return false;
+        seen.add(o.value);
+        return true;
+      });
+  }, [data.nav]);
   if (!open) return null;
   return (
     <div className="admin-overlay" onClick={onClose}>
@@ -652,6 +663,11 @@ function BackOffice({ open, onClose, data, setData }) {
                   {!productSportOptions.some((o) => o.value === p.sport) ? <option value={p.sport}>{p.sport}</option> : null}
                   {productSportOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                 </select>
+                <select value={p.subcategory || ''} onChange={(e) => updatePath(setData, ['products', i, 'subcategory'], e.target.value)}>
+                  <option value="">Sous-catégorie</option>
+                  {!p.subcategory ? null : !productSubcategoryOptions.some((o) => o.value === p.subcategory) ? <option value={p.subcategory}>{p.subcategory}</option> : null}
+                  {productSubcategoryOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
                 <textarea rows={2} value={p.desc} onChange={(e) => updatePath(setData, ['products', i, 'desc'], e.target.value)} placeholder="Description" />
                 <input value={p.image} onChange={(e) => updatePath(setData, ['products', i, 'image'], e.target.value)} placeholder="URL image" />
                 <input value={p.sizes.join(',')} onChange={(e) => updatePath(setData, ['products', i, 'sizes'], e.target.value.split(',').map((x) => x.trim()).filter(Boolean))} placeholder="Tailles: 40,41,42" />
@@ -674,6 +690,7 @@ function BackOffice({ open, onClose, data, setData }) {
                 category: productCategoryFilter !== 'all' ? productCategoryFilter : (prev.categories[0]?.id || 'sneakers'),
                 gender: 'unisex',
                 sport: 'lifestyle',
+                subcategory: '',
                 isNew: true,
                 image: '',
                 sizes: ['Unique'],
