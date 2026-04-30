@@ -898,3 +898,13 @@ body.is-desktop .product-card:hover {
   color: #e33a34;
 }
 
+
+
+.ss-logo-sub {
+  margin-top: 6px;
+  color: #fff;
+  text-align: center;
+  font-family: Anton, sans-serif;
+  letter-spacing: .07em;
+  font-size: clamp(.9rem, 3vw, 1.7rem);
+}
