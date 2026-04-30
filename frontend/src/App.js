@@ -117,6 +117,20 @@ function BrandStrip() {
   );
 }
 
+
+function useDeviceClass() {
+  useEffect(() => {
+    const apply = () => {
+      const isMobile = window.matchMedia('(max-width: 900px)').matches || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      document.body.classList.toggle('is-mobile', isMobile);
+      document.body.classList.toggle('is-desktop', !isMobile);
+    };
+    apply();
+    window.addEventListener('resize', apply);
+    return () => window.removeEventListener('resize', apply);
+  }, []);
+}
+
 function Header({ data, cartCount, onOpenCart }) {
   return (
     <header className="topbar">
@@ -413,6 +427,7 @@ function Footer({ data }) {
 
 export default function App() {
   useReveal();
+  useDeviceClass();
   const [data, setData] = useData();
   const [selected, setSelected] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);

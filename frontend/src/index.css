@@ -813,3 +813,32 @@ select:focus {
   object-fit: contain;
   filter: grayscale(1);
 }
+
+/* Auto adaptation device */
+body.is-mobile .topline {
+  font-size: .74rem;
+  letter-spacing: .03em;
+}
+
+body.is-mobile .brand-track span {
+  font-size: .82rem;
+}
+
+body.is-mobile .photo-track img {
+  width: 104px;
+  height: 78px;
+}
+
+body.is-mobile .shop-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+body.is-desktop .cards-3 {
+  gap: 14px;
+}
+
+body.is-desktop .product-card:hover {
+  transform: translateY(-5px);
+}
