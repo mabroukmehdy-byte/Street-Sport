@@ -44,6 +44,14 @@ const defaultData = {
     subtitle: 'Des drops sneakers, vêtements et accessoires. Livraison rapide en France.',
     image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1900&q=80',
   },
+  heroSlides: [
+    {
+      id: 'h1',
+      title: 'Nouveautés performance & street',
+      subtitle: 'Des drops sneakers, vêtements et accessoires. Livraison rapide en France.',
+      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1900&q=80',
+    },
+  ],
   nav: {
     nouveautes: ['Nouveaux produits', 'Best-sellers', 'Drops exclusifs', 'Collections saison'],
     homme: ['Chaussures', 'Vêtements', 'Accessoires', 'Running', 'Training', 'Basket'],
@@ -64,7 +72,14 @@ function useData() {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setData({ ...defaultData, ...JSON.parse(raw) });
+      if (raw) {
+        const parsed = { ...defaultData, ...JSON.parse(raw) };
+        if (!parsed.heroSlides || !parsed.heroSlides.length) {
+          parsed.heroSlides = [{ id: `h${Date.now()}`, ...parsed.hero }];
+        }
+        parsed.hero = parsed.heroSlides[0] || parsed.hero;
+        setData(parsed);
+      }
     } catch (_) {}
   }, []);
   useEffect(() => {
@@ -490,6 +505,10 @@ function AdminLogin({ onSuccess, onClose }) {
 
 function BackOffice({ open, onClose, data, setData }) {
   const [tab, setTab] = useState('produits');
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryImage, setNewCategoryImage] = useState('');
+  const [productCategoryFilter, setProductCategoryFilter] = useState('all');
+  const slugify = (v) => String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   if (!open) return null;
   return (
     <div className="admin-overlay" onClick={onClose}>
@@ -499,18 +518,69 @@ function BackOffice({ open, onClose, data, setData }) {
 
         {tab === 'hero' && (
           <section className="admin-section">
-            <input value={data.hero.title} onChange={(e) => updatePath(setData, ['hero', 'title'], e.target.value)} placeholder="Titre hero" />
-            <textarea rows={3} value={data.hero.subtitle} onChange={(e) => updatePath(setData, ['hero', 'subtitle'], e.target.value)} />
-            <input value={data.hero.image} onChange={(e) => updatePath(setData, ['hero', 'image'], e.target.value)} placeholder="URL image hero" />
-            <label className="import-btn">Importer image hero<input type="file" accept="image/*" onChange={async (e) => {
-              const f = e.target.files?.[0]; if (!f) return;
-              const url = await fileToDataUrl(f); updatePath(setData, ['hero', 'image'], url);
-            }} /></label>
+            {(data.heroSlides || []).map((h, i) => (
+              <div className="admin-card" key={h.id || i}>
+                <input value={h.title} onChange={(e) => setData((prev) => {
+                  const heroSlides = [...(prev.heroSlides || [])];
+                  heroSlides[i] = { ...heroSlides[i], title: e.target.value };
+                  return { ...prev, heroSlides, hero: heroSlides[0] || prev.hero };
+                })} placeholder="Titre hero" />
+                <textarea rows={3} value={h.subtitle} onChange={(e) => setData((prev) => {
+                  const heroSlides = [...(prev.heroSlides || [])];
+                  heroSlides[i] = { ...heroSlides[i], subtitle: e.target.value };
+                  return { ...prev, heroSlides, hero: heroSlides[0] || prev.hero };
+                })} />
+                <input value={h.image} onChange={(e) => setData((prev) => {
+                  const heroSlides = [...(prev.heroSlides || [])];
+                  heroSlides[i] = { ...heroSlides[i], image: e.target.value };
+                  return { ...prev, heroSlides, hero: heroSlides[0] || prev.hero };
+                })} placeholder="URL image hero" />
+                <label className="import-btn">Importer image hero<input type="file" accept="image/*" onChange={async (e) => {
+                  const f = e.target.files?.[0]; if (!f) return;
+                  const url = await fileToDataUrl(f);
+                  setData((prev) => {
+                    const heroSlides = [...(prev.heroSlides || [])];
+                    heroSlides[i] = { ...heroSlides[i], image: url };
+                    return { ...prev, heroSlides, hero: heroSlides[0] || prev.hero };
+                  });
+                }} /></label>
+                <button onClick={() => setData((prev) => {
+                  const heroSlides = (prev.heroSlides || []).filter((_, idx) => idx !== i);
+                  if (!heroSlides.length) heroSlides.push({ id: `h${Date.now()}`, title: 'Nouveau hero', subtitle: 'Sous-titre', image: prev.hero?.image || '' });
+                  return { ...prev, heroSlides, hero: heroSlides[0] };
+                })}>Supprimer slide hero</button>
+              </div>
+            ))}
+            <button onClick={() => setData((prev) => {
+              const heroSlides = [...(prev.heroSlides || []), { id: `h${Date.now()}`, title: 'Nouveau hero', subtitle: 'Sous-titre', image: prev.hero?.image || '' }];
+              return { ...prev, heroSlides, hero: heroSlides[0] || prev.hero };
+            })}>Ajouter un hero</button>
           </section>
         )}
 
         {tab === 'categories' && (
           <section className="admin-section">
+            <div className="admin-card">
+              <h4>Ajouter une catégorie</h4>
+              <input value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)} placeholder="Nom catégorie (ex: Running)" />
+              <input value={newCategoryImage} onChange={(e) => setNewCategoryImage(e.target.value)} placeholder="URL image catégorie" />
+              <label>Importer image<input type="file" accept="image/*" onChange={async (e) => {
+                const f = e.target.files?.[0]; if (!f) return;
+                const url = await fileToDataUrl(f); setNewCategoryImage(url);
+              }} /></label>
+              <button onClick={() => {
+                const name = newCategoryName.trim();
+                const id = slugify(name);
+                if (!name || !id) return;
+                setData((prev) => {
+                  if (prev.categories.some((x) => x.id === id)) return prev;
+                  return { ...prev, categories: [...prev.categories, { id, name, image: newCategoryImage || prev.heroSlides?.[0]?.image || prev.hero.image }] };
+                });
+                setNewCategoryName('');
+                setNewCategoryImage('');
+              }}>Ajouter catégorie</button>
+            </div>
+
             {data.categories.map((c, i) => (
               <div className="admin-card" key={c.id}>
                 <input value={c.name} onChange={(e) => updatePath(setData, ['categories', i, 'name'], e.target.value)} />
@@ -519,6 +589,15 @@ function BackOffice({ open, onClose, data, setData }) {
                   const f = e.target.files?.[0]; if (!f) return;
                   const url = await fileToDataUrl(f); updatePath(setData, ['categories', i, 'image'], url);
                 }} /></label>
+                <small>ID: {c.id}</small>
+                <button onClick={() => setData((prev) => {
+                  const fallback = prev.categories.find((x) => x.id !== c.id)?.id || 'sneakers';
+                  return {
+                    ...prev,
+                    categories: prev.categories.filter((x) => x.id !== c.id),
+                    products: prev.products.map((p) => p.category === c.id ? { ...p, category: fallback } : p),
+                  };
+                })}>Supprimer catégorie</button>
               </div>
             ))}
           </section>
@@ -526,13 +605,25 @@ function BackOffice({ open, onClose, data, setData }) {
 
         {tab === 'produits' && (
           <section className="admin-section">
-            {data.products.map((p, i) => (
+            <div className="admin-card">
+              <h4>Filtrer par catégorie</h4>
+              <select value={productCategoryFilter} onChange={(e) => setProductCategoryFilter(e.target.value)}>
+                <option value="all">Toutes</option>
+                {data.categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
+
+            {data.products.filter((p) => productCategoryFilter === 'all' ? true : p.category === productCategoryFilter).map((p) => {
+              const i = data.products.findIndex((x) => x.id === p.id);
+              return (
               <div className="admin-card" key={p.id}>
                 <input value={p.name} onChange={(e) => updatePath(setData, ['products', i, 'name'], e.target.value)} placeholder="Nom produit" />
                 <input value={p.brand} onChange={(e) => updatePath(setData, ['products', i, 'brand'], e.target.value)} placeholder="Marque" />
                 <input type="number" value={p.price} onChange={(e) => updatePath(setData, ['products', i, 'price'], Number(e.target.value || 0))} placeholder="Prix" />
                 <input type="number" value={p.oldPrice || 0} onChange={(e) => updatePath(setData, ['products', i, 'oldPrice'], Number(e.target.value || 0) || null)} placeholder="Ancien prix" />
-                <input value={p.category} onChange={(e) => updatePath(setData, ['products', i, 'category'], e.target.value)} placeholder="Catégorie" />
+                <select value={p.category} onChange={(e) => updatePath(setData, ['products', i, 'category'], e.target.value)}>
+                  {data.categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
                 <input value={p.gender} onChange={(e) => updatePath(setData, ['products', i, 'gender'], e.target.value)} placeholder="Genre" />
                 <input value={p.sport} onChange={(e) => updatePath(setData, ['products', i, 'sport'], e.target.value)} placeholder="Sport" />
                 <textarea rows={2} value={p.desc} onChange={(e) => updatePath(setData, ['products', i, 'desc'], e.target.value)} placeholder="Description" />
@@ -544,10 +635,24 @@ function BackOffice({ open, onClose, data, setData }) {
                 }} /></label>
                 <button onClick={() => setData((prev) => ({ ...prev, products: prev.products.filter((x) => x.id !== p.id) }))}>Supprimer</button>
               </div>
-            ))}
+              );
+            })}
             <button onClick={() => setData((prev) => ({
               ...prev,
-              products: [...prev.products, { id: `p${Date.now()}`, name: 'Nouveau produit', brand: 'Street Sport', price: 0, oldPrice: null, category: 'sneakers', gender: 'unisex', sport: 'lifestyle', isNew: true, image: '', sizes: ['Unique'], desc: 'Description' }],
+              products: [...prev.products, {
+                id: `p${Date.now()}`,
+                name: 'Nouveau produit',
+                brand: 'Street Sport',
+                price: 0,
+                oldPrice: null,
+                category: productCategoryFilter !== 'all' ? productCategoryFilter : (prev.categories[0]?.id || 'sneakers'),
+                gender: 'unisex',
+                sport: 'lifestyle',
+                isNew: true,
+                image: '',
+                sizes: ['Unique'],
+                desc: 'Description',
+              }],
             }))}>Ajouter un produit</button>
           </section>
         )}
