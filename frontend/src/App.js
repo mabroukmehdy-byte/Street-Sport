@@ -337,6 +337,17 @@ function Catalog({ products, onOpen, onQuickAdd }) {
         return true;
       });
   }, [products]);
+  const categoryOptions = useMemo(() => {
+    const seen = new Set();
+    return products
+      .map((p) => p.category)
+      .filter(Boolean)
+      .filter((c) => {
+        if (seen.has(c)) return false;
+        seen.add(c);
+        return true;
+      });
+  }, [products]);
 
   const list = useMemo(() => {
     let r = products;
@@ -357,7 +368,10 @@ function Catalog({ products, onOpen, onQuickAdd }) {
       <div className="shop-head reveal">
         <h2>Tous les articles</h2>
         <div className="shop-controls">
-          <select value={category} onChange={(e) => setCategory(e.target.value)}><option value="all">Catégorie</option><option value="sneakers">Sneakers</option><option value="vetements">Vêtements</option><option value="accessoires">Accessoires</option></select>
+          <select value={category} onChange={(e) => setCategory(e.target.value)}>
+            <option value="all">Catégorie</option>
+            {categoryOptions.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
           <select value={gender} onChange={(e) => setGender(e.target.value)}><option value="all">Genre</option><option value="homme">Homme</option><option value="femme">Femme</option><option value="enfant">Enfant</option></select>
           <select value={sport} onChange={(e) => setSport(e.target.value)}><option value="all">Sport</option><option value="running">Running</option><option value="basket">Basket</option><option value="training">Training</option><option value="lifestyle">Lifestyle</option></select>
           <select value={subcategory} onChange={(e) => setSubcategory(e.target.value)}>
@@ -594,12 +608,8 @@ function BackOffice({ open, onClose, data, setData, saveError }) {
   const [sizeDrafts, setSizeDrafts] = useState({});
   const slugify = (v) => String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const productCategoryOptions = useMemo(() => {
-    return [
-      { value: 'sneakers', label: 'Sneakers' },
-      { value: 'vetements', label: 'Vêtements' },
-      { value: 'accessoires', label: 'Accessoires' },
-    ];
-  }, []);
+    return (data.categories || []).map((c) => ({ value: c.id, label: c.name }));
+  }, [data.categories]);
   const productGenderOptions = useMemo(() => ([
     { value: 'homme', label: 'Homme' },
     { value: 'femme', label: 'Femme' },
