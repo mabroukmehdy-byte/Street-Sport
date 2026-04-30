@@ -419,6 +419,7 @@ function CartDrawer({ open, onClose, cart, setCart }) {
             </div>
             <p>Livraison: <strong>{shippingBase === 0 ? 'Offerte' : `${shippingBase.toFixed(2)} EUR`}</strong></p>
             <p>Total: <strong>{total.toFixed(2)} EUR</strong></p>
+            <button className="btn ghost" onClick={() => { onClose(); clearCheckout(); }}>Continuer mes achats</button>
             <button disabled={!cart.length} onClick={() => setStep('checkout')}>Passer au paiement</button>
           </div>
         </>
