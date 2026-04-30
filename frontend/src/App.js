@@ -113,6 +113,12 @@ function Header({ data, cartCount, onOpenCart }) {
       <div className="topline">Livraison offerte dès 100 EUR • Retours 30 jours</div>
       <div className="navline">
         <p className="brand">{data.brand.name}</p>
+        <div className="quick-links">
+          <a href="#nouveautes">Homme</a>
+          <a href="#nouveautes">Femme</a>
+          <a href="#nouveautes">Sneakers</a>
+          <a href="#catalogue">Catalogue</a>
+        </div>
         <input className="search" id="search" placeholder="Rechercher chaussures, vêtements, accessoires" />
         <button className="cart-chip" onClick={onOpenCart}>Panier ({cartCount})</button>
       </div>
@@ -374,7 +380,7 @@ export default function App() {
   };
 
   return (
-    <main>
+    <main id="home">
       <Header data={data} cartCount={cartCount} onOpenCart={() => setCartOpen(true)} />
       <CategoryExplorer data={data} onOpen={openProduct} onQuickAdd={addToCart} />
       <Catalog products={data.products} onOpen={openProduct} onQuickAdd={addToCart} />
