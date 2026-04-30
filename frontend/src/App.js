@@ -279,7 +279,7 @@ function ProductCard({ p, onOpen, onQuickAdd }) {
       <div>
         <small>{meta}</small>
         <h3>{p.name}</h3>
-        <p><strong>{String(p.price)}</strong>{p.oldPrice ? <span className="old">{String(p.oldPrice)}</span> : null}{discount > 0 ? <span className="sale">-{discount}%</span> : null}</p>
+        <p><strong>{String(p.price)}</strong>{p.oldPrice ? <span className="old">{String(p.oldPrice)}</span> : null}{discount > 0 ? <span className="sale"> (-{discount}%)</span> : null}</p>
         <div className="card-actions"><button onClick={() => onOpen(p)}>Voir</button><button onClick={() => onQuickAdd(p)}>Ajout rapide</button></div>
       </div>
     </article>
