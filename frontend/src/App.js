@@ -4,39 +4,52 @@ import '@fontsource/manrope/400.css';
 import '@fontsource/manrope/700.css';
 import './index.css';
 
-const STORAGE_KEY = 'streetsport_shop_v2';
+const STORAGE_KEY = 'streetsport_nike_visual_bo_v1';
+
+const seedProducts = [
+  { id: 'p1', name: 'Velocity Air One', brand: 'Street Sport', price: 129, oldPrice: 149, category: 'sneakers', gender: 'homme', sport: 'running', isNew: true, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80', sizes: ['40', '41', '42', '43', '44'], desc: 'Amorti réactif et empeigne respirante.' },
+  { id: 'p2', name: 'Court Legacy Mid', brand: 'Street Sport', price: 119, oldPrice: null, category: 'sneakers', gender: 'femme', sport: 'lifestyle', isNew: true, image: 'https://images.unsplash.com/photo-1600269452121-4f2416e55c28?auto=format&fit=crop&w=900&q=80', sizes: ['37', '38', '39', '40', '41'], desc: 'Silhouette montante inspirée des classiques urbains.' },
+  { id: 'p3', name: 'Urban Sprint X', brand: 'Street Sport', price: 139, oldPrice: 169, category: 'sneakers', gender: 'homme', sport: 'training', isNew: false, image: 'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=900&q=80', sizes: ['40', '41', '42', '43', '44'], desc: 'Stabilité latérale pour les entraînements intenses.' },
+  { id: 'p4', name: 'Metro Runner Lite', brand: 'Street Sport', price: 99, oldPrice: null, category: 'sneakers', gender: 'femme', sport: 'running', isNew: false, image: 'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=900&q=80', sizes: ['36', '37', '38', '39', '40'], desc: 'Légèreté et dynamisme pour les runs quotidiens.' },
+  { id: 'p5', name: 'Hoodie Core Oversize', brand: 'Street Sport', price: 79, oldPrice: 99, category: 'vetements', gender: 'homme', sport: 'lifestyle', isNew: true, image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80', sizes: ['S', 'M', 'L', 'XL'], desc: 'Coton épais, coupe ample, confort maximal.' },
+  { id: 'p6', name: 'Tee Performance Dry', brand: 'Street Sport', price: 35, oldPrice: null, category: 'vetements', gender: 'femme', sport: 'training', isNew: true, image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=900&q=80', sizes: ['XS', 'S', 'M', 'L'], desc: 'Tissu léger anti-transpiration.' },
+  { id: 'p7', name: 'Pantalon Cargo Move', brand: 'Street Sport', price: 89, oldPrice: null, category: 'vetements', gender: 'homme', sport: 'lifestyle', isNew: false, image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=900&q=80', sizes: ['30', '32', '34', '36'], desc: 'Coupe droite et poches utilitaires.' },
+  { id: 'p8', name: 'Legging Studio Fit', brand: 'Street Sport', price: 59, oldPrice: null, category: 'vetements', gender: 'femme', sport: 'training', isNew: false, image: 'https://images.unsplash.com/photo-1506629905607-d9b1f073f201?auto=format&fit=crop&w=900&q=80', sizes: ['XS', 'S', 'M', 'L'], desc: 'Maintien ciblé et liberté de mouvement.' },
+  { id: 'p9', name: 'Veste Wind Urban', brand: 'Street Sport', price: 109, oldPrice: 129, category: 'vetements', gender: 'homme', sport: 'running', isNew: true, image: 'https://images.unsplash.com/photo-1548883354-94bcfe321cbb?auto=format&fit=crop&w=900&q=80', sizes: ['S', 'M', 'L', 'XL'], desc: 'Protection légère contre le vent.' },
+  { id: 'p10', name: 'Casquette Snap 75018', brand: 'Street Sport', price: 29, oldPrice: null, category: 'accessoires', gender: 'unisex', sport: 'lifestyle', isNew: false, image: 'https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=900&q=80', sizes: ['Unique'], desc: 'Broderie premium, ajustable.' },
+  { id: 'p11', name: 'Sac Banane Tech', brand: 'Street Sport', price: 39, oldPrice: null, category: 'accessoires', gender: 'unisex', sport: 'lifestyle', isNew: true, image: 'https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=900&q=80', sizes: ['Unique'], desc: 'Format compact avec poche zippée.' },
+  { id: 'p12', name: 'Chaussettes Crew x3', brand: 'Street Sport', price: 19, oldPrice: null, category: 'accessoires', gender: 'unisex', sport: 'training', isNew: false, image: 'https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?auto=format&fit=crop&w=900&q=80', sizes: ['39-42', '43-46'], desc: 'Pack de 3, maintien de voûte.' },
+  { id: 'p13', name: 'Backpack Sport Daily', brand: 'Street Sport', price: 69, oldPrice: 79, category: 'accessoires', gender: 'unisex', sport: 'training', isNew: true, image: 'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?auto=format&fit=crop&w=900&q=80', sizes: ['Unique'], desc: 'Compartiments laptop et chaussures.' },
+  { id: 'p14', name: 'Bonnet Knit Season', brand: 'Street Sport', price: 25, oldPrice: null, category: 'accessoires', gender: 'unisex', sport: 'lifestyle', isNew: false, image: 'https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?auto=format&fit=crop&w=900&q=80', sizes: ['Unique'], desc: 'Maille épaisse et logo tissé.' },
+  { id: 'p15', name: 'Kids Flex Runner', brand: 'Street Sport', price: 69, oldPrice: null, category: 'sneakers', gender: 'enfant', sport: 'running', isNew: true, image: 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&w=900&q=80', sizes: ['31', '32', '33', '34', '35'], desc: 'Confort quotidien pour les jeunes sportifs.' },
+  { id: 'p16', name: 'Junior Hoodie Team', brand: 'Street Sport', price: 49, oldPrice: null, category: 'vetements', gender: 'enfant', sport: 'training', isNew: true, image: 'https://images.unsplash.com/photo-1503341733017-1901578f9f1e?auto=format&fit=crop&w=900&q=80', sizes: ['10A', '12A', '14A'], desc: 'Hoodie junior doux et résistant.' },
+  { id: 'p17', name: 'Track Jacket Club', brand: 'Street Sport', price: 95, oldPrice: null, category: 'vetements', gender: 'femme', sport: 'training', isNew: false, image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80', sizes: ['XS', 'S', 'M', 'L'], desc: 'Veste zippée inspirée des tracks rétro.' },
+  { id: 'p18', name: 'Street Slide Comfort', brand: 'Street Sport', price: 39, oldPrice: null, category: 'sneakers', gender: 'unisex', sport: 'lifestyle', isNew: false, image: 'https://images.unsplash.com/photo-1605034313761-73ea4a0cfbf3?auto=format&fit=crop&w=900&q=80', sizes: ['38', '39', '40', '41', '42', '43'], desc: 'Claquettes confort pour après-effort.' },
+];
 
 const defaultData = {
-  marque: {
-    nom: 'Street Sport',
-    baseline: 'Sneakers, textile, accessoires',
-    adresse: '30 Bd Ornano, 75018 Paris',
-    telephone: '+33 7 53 19 69 73',
-    email: 'contact@streetsport-paris.fr',
-  },
+  brand: { name: 'Street Sport', tagline: 'Sport urbain et streetwear', address: '30 Bd Ornano, 75018 Paris' },
   hero: {
-    accroche: 'NOUVELLE COLLECTION STREET & SPORT',
-    sousTexte: 'Decouvre les derniers drops sneakers, vetements et accessoires. Livraison rapide en France.',
-    boutonPrincipal: 'Acheter maintenant',
-    boutonSecondaire: 'Voir les nouveautes',
-    image: 'https://images.unsplash.com/photo-1602078019624-f4355d0687fd?auto=format&fit=crop&w=1800&q=80',
+    title: 'Nouveautés performance & street',
+    subtitle: 'Des drops sneakers, vêtements et accessoires. Livraison rapide en France.',
+    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1900&q=80',
+  },
+  nav: {
+    nouveautes: ['Nouveaux produits', 'Best-sellers', 'Drops exclusifs', 'Collections saison'],
+    homme: ['Chaussures', 'Vêtements', 'Accessoires', 'Running', 'Training', 'Basket'],
+    femme: ['Chaussures', 'Vêtements', 'Accessoires', 'Lifestyle', 'Running', 'Yoga'],
+    enfants: ['Chaussures', 'Vêtements', 'Accessoires', 'Sport', 'École'],
+    sport: ['Running', 'Football', 'Basketball', 'Training', 'Tennis'],
   },
   categories: [
-    { nom: 'Homme', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80' },
-    { nom: 'Femme', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80' },
-    { nom: 'Sneakers', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80' },
+    { id: 'sneakers', name: 'Sneakers', image: 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=1200&q=80' },
+    { id: 'vetements', name: 'Vêtements', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80' },
+    { id: 'accessoires', name: 'Accessoires', image: 'https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=1200&q=80' },
   ],
-  produits: [
-    { id: 'p1', nom: 'Air Force 1 Triple White', marque: 'Nike', prix: 119, categorie: 'Sneakers', image: 'https://images.unsplash.com/photo-1602078019624-f4355d0687fd?auto=format&fit=crop&w=900&q=80', description: 'Silhouette iconique et confort quotidien.', tailles: ['40', '41', '42', '43', '44'] },
-    { id: 'p2', nom: 'Jordan 1 Mid Chicago', marque: 'Jordan', prix: 149, categorie: 'Sneakers', image: 'https://images.pexels.com/photos/10047329/pexels-photo-10047329.jpeg?auto=compress&cs=tinysrgb&w=1200', description: 'Un classique basket en coloris rouge/noir.', tailles: ['40', '41', '42', '43', '44'] },
-    { id: 'p3', nom: 'Hoodie Heavy Rooftop', marque: 'Carhartt', prix: 89, categorie: 'Vetements', image: 'https://images.unsplash.com/photo-1554925051-f668ed70d520?auto=format&fit=crop&w=1200&q=80', description: 'Hoodie coton lourd coupe oversize.', tailles: ['S', 'M', 'L', 'XL'] },
-    { id: 'p4', nom: 'Tee Ornano 75018', marque: 'Street Sport', prix: 35, categorie: 'Vetements', image: 'https://images.pexels.com/photos/33884624/pexels-photo-33884624.jpeg?auto=compress&cs=tinysrgb&w=1200', description: 'Edition locale du shop.', tailles: ['S', 'M', 'L', 'XL'] },
-    { id: 'p5', nom: 'Cargo Heavy', marque: 'Carhartt', prix: 109, categorie: 'Vetements', image: 'https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=1200&q=80', description: 'Pantalon robuste multi-poches.', tailles: ['30', '32', '34', '36'] },
-    { id: 'p6', nom: 'Sac Banane Tech', marque: 'Nike', prix: 35, categorie: 'Accessoires', image: 'https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=1200&q=80', description: 'Compact et fonctionnel.', tailles: ['Unique'] },
-  ],
+  products: seedProducts,
 };
 
-function useSiteData() {
+function useData() {
   const [data, setData] = useState(defaultData);
   useEffect(() => {
     try {
@@ -50,180 +63,6 @@ function useSiteData() {
   return [data, setData];
 }
 
-function Header({ data, count, onCartOpen }) {
-  return (
-    <header className="topbar">
-      <p className="brand">{data.marque.nom.toUpperCase()}</p>
-      <nav>
-        <a href="#nouveautes">Nouveautes</a>
-        <a href="#homme">Homme</a>
-        <a href="#femme">Femme</a>
-        <a href="#sneakers">Sneakers</a>
-      </nav>
-      <button className="cart-chip" onClick={onCartOpen}>Panier ({count})</button>
-    </header>
-  );
-}
-
-function Hero({ data }) {
-  return (
-    <section className="hero" style={{ backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.68), rgba(0,0,0,.26)), url(${data.hero.image})` }}>
-      <div className="hero-inner">
-        <p className="eyebrow">NOUVEAU DROP</p>
-        <h1>{data.hero.accroche}</h1>
-        <p>{data.hero.sousTexte}</p>
-        <div className="hero-actions">
-          <a href="#produits" className="btn primary">{data.hero.boutonPrincipal}</a>
-          <a href="#nouveautes" className="btn ghost">{data.hero.boutonSecondaire}</a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function CategoryTiles({ data }) {
-  return (
-    <section id="nouveautes" className="section">
-      <h2>Acheter par categorie</h2>
-      <div className="looks-grid">
-        {data.categories.map((c) => (
-          <article key={c.nom}>
-            <img src={c.image} alt={c.nom} />
-            <div>
-              <h3>{c.nom}</h3>
-              <p>Voir la collection</p>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function ProductGrid({ data, onOpen }) {
-  const [cat, setCat] = useState('Tous');
-  const [sort, setSort] = useState('featured');
-
-  const list = useMemo(() => {
-    let p = cat === 'Tous' ? data.produits : data.produits.filter((x) => x.categorie === cat);
-    if (sort === 'price-asc') p = [...p].sort((a, b) => a.prix - b.prix);
-    if (sort === 'price-desc') p = [...p].sort((a, b) => b.prix - a.prix);
-    return p;
-  }, [data.produits, cat, sort]);
-
-  return (
-    <section id="produits" className="section">
-      <div className="shop-head">
-        <h2>Articles a la une</h2>
-        <div className="shop-controls">
-          <select value={cat} onChange={(e) => setCat(e.target.value)}>
-            <option>Tous</option>
-            <option>Sneakers</option>
-            <option>Vetements</option>
-            <option>Accessoires</option>
-          </select>
-          <select value={sort} onChange={(e) => setSort(e.target.value)}>
-            <option value="featured">Selection</option>
-            <option value="price-asc">Prix croissant</option>
-            <option value="price-desc">Prix decroissant</option>
-          </select>
-        </div>
-      </div>
-      <div className="cards-3">
-        {list.map((p) => (
-          <article key={p.id} className="product-card" onClick={() => onOpen(p)}>
-            <img src={p.image} alt={p.nom} />
-            <div>
-              <small>{p.marque}</small>
-              <h3>{p.nom}</h3>
-              <p>{p.prix} EUR</p>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function ProductModal({ product, onClose, onAdd }) {
-  const [taille, setTaille] = useState(product?.tailles?.[0] || 'Unique');
-  if (!product) return null;
-  return (
-    <div className="admin-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <img src={product.image} alt={product.nom} />
-        <div>
-          <small>{product.marque}</small>
-          <h3>{product.nom}</h3>
-          <p>{product.description}</p>
-          <label>Taille</label>
-          <select value={taille} onChange={(e) => setTaille(e.target.value)}>
-            {product.tailles.map((t) => <option key={t}>{t}</option>)}
-          </select>
-          <div className="hero-actions">
-            <button onClick={() => onAdd(product, taille)}>Ajouter au panier</button>
-            <button className="btn ghost" onClick={onClose}>Fermer</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CartDrawer({ open, onClose, cart, setCart }) {
-  const subtotal = cart.reduce((s, i) => s + i.prix * i.qty, 0);
-  const shipping = subtotal > 100 || subtotal === 0 ? 0 : 6.9;
-  const total = subtotal + shipping;
-
-  return (
-    <aside className={`drawer ${open ? 'show' : ''}`}>
-      <div className="drawer-head"><h3>Panier</h3><button onClick={onClose}>Fermer</button></div>
-      <div className="drawer-body">
-        {cart.length === 0 ? <p>Ton panier est vide.</p> : cart.map((i) => (
-          <div className="line" key={i.key}>
-            <img src={i.image} alt={i.nom} />
-            <div>
-              <strong>{i.nom}</strong>
-              <p>{i.taille} - {i.prix} EUR</p>
-              <div className="hero-actions">
-                <button onClick={() => setCart((prev) => prev.map((x) => x.key === i.key ? { ...x, qty: Math.max(1, x.qty - 1) } : x))}>-</button>
-                <span>{i.qty}</span>
-                <button onClick={() => setCart((prev) => prev.map((x) => x.key === i.key ? { ...x, qty: x.qty + 1 } : x))}>+</button>
-                <button onClick={() => setCart((prev) => prev.filter((x) => x.key !== i.key))}>Suppr.</button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="drawer-foot">
-        <p>Sous-total: <strong>{subtotal.toFixed(2)} EUR</strong></p>
-        <p>Livraison: <strong>{shipping === 0 ? 'Offerte' : `${shipping.toFixed(2)} EUR`}</strong></p>
-        <p>Total: <strong>{total.toFixed(2)} EUR</strong></p>
-        <button>Payer</button>
-      </div>
-    </aside>
-  );
-}
-
-function Footer({ data }) {
-  return (
-    <footer className="footer">
-      <p>{data.marque.nom} - {data.marque.baseline}</p>
-      <p>{data.marque.adresse}</p>
-    </footer>
-  );
-}
-
-function updatePath(setData, path, value) {
-  setData((prev) => {
-    const next = structuredClone(prev);
-    let cur = next;
-    for (let i = 0; i < path.length - 1; i += 1) cur = cur[path[i]];
-    cur[path[path.length - 1]] = value;
-    return next;
-  });
-}
-
 function fileToDataUrl(file) {
   return new Promise((resolve, reject) => {
     const r = new FileReader();
@@ -233,30 +72,196 @@ function fileToDataUrl(file) {
   });
 }
 
-function BackOffice({ open, onClose, data, setData }) {
-  const [tab, setTab] = useState('hero');
-  if (!open) return null;
+function updatePath(setData, path, value) {
+  setData((prev) => {
+    const next = structuredClone(prev);
+    let cursor = next;
+    for (let i = 0; i < path.length - 1; i += 1) cursor = cursor[path[i]];
+    cursor[path[path.length - 1]] = value;
+    return next;
+  });
+}
 
+function MegaMenu({ nav }) {
+  const entries = Object.entries(nav);
+  return (
+    <div className="mega-wrap">
+      {entries.map(([k, vals]) => (
+        <div key={k} className="mega-col"><h4>{k}</h4>{vals.map((v) => <a key={v} href="#catalogue">{v}</a>)}</div>
+      ))}
+    </div>
+  );
+}
+
+function Header({ data, cartCount, onOpenCart }) {
+  return (
+    <header className="topbar">
+      <div className="topline">Livraison offerte dès 100 EUR • Retours 30 jours</div>
+      <div className="navline">
+        <p className="brand">{data.brand.name}</p>
+        <input className="search" id="search" placeholder="Rechercher chaussures, vêtements, accessoires" />
+        <button className="cart-chip" onClick={onOpenCart}>Panier ({cartCount})</button>
+      </div>
+      <MegaMenu nav={data.nav} />
+    </header>
+  );
+}
+
+function Hero({ data }) {
+  return (
+    <section className="hero" style={{ backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.70), rgba(0,0,0,.25)), url(${data.hero.image})` }}>
+      <div className="hero-inner">
+        <p className="eyebrow">NOUVEAUTÉS</p>
+        <h1>{data.hero.title}</h1>
+        <p>{data.hero.subtitle}</p>
+        <div className="hero-actions"><a href="#catalogue" className="btn primary">Acheter</a><a href="#nouveautes" className="btn ghost">Explorer</a></div>
+      </div>
+    </section>
+  );
+}
+
+function CategoryTiles({ data }) {
+  return (
+    <section id="nouveautes" className="section">
+      <h2>Trouver ton style</h2>
+      <div className="looks-grid">
+        {data.categories.map((c) => (
+          <article key={c.id}><img src={c.image} alt={c.name} /><div><h3>{c.name}</h3><p>Voir la sélection</p></div></article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ProductCard({ p, onOpen, onQuickAdd }) {
+  const discount = p.oldPrice ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100) : 0;
+  return (
+    <article className="product-card">
+      <button className="img-btn" onClick={() => onOpen(p)}><img src={p.image} alt={p.name} /></button>
+      <div>
+        <small>{p.brand} • {p.gender}</small>
+        <h3>{p.name}</h3>
+        <p><strong>{p.price} EUR</strong>{p.oldPrice ? <span className="old">{p.oldPrice} EUR</span> : null}{discount > 0 ? <span className="sale">-{discount}%</span> : null}</p>
+        <div className="card-actions"><button onClick={() => onOpen(p)}>Voir</button><button onClick={() => onQuickAdd(p)}>Ajout rapide</button></div>
+      </div>
+    </article>
+  );
+}
+
+function SmartRecommendations({ viewed, all, onOpen, onQuickAdd }) {
+  const recos = useMemo(() => {
+    if (!viewed.length) return all.filter((x) => x.isNew).slice(0, 6);
+    const last = viewed[viewed.length - 1];
+    return all.filter((x) => x.id !== last.id && (x.category === last.category || x.brand === last.brand || x.sport === last.sport)).slice(0, 6);
+  }, [viewed, all]);
+  return (
+    <section className="section"><h2>Recommandé pour toi</h2><div className="cards-3">{recos.map((p) => <ProductCard key={p.id} p={p} onOpen={onOpen} onQuickAdd={onQuickAdd} />)}</div></section>
+  );
+}
+
+function Catalog({ products, onOpen, onQuickAdd }) {
+  const [q, setQ] = useState('');
+  const [category, setCategory] = useState('all');
+  const [gender, setGender] = useState('all');
+  const [sport, setSport] = useState('all');
+  const [sort, setSort] = useState('featured');
+
+  useEffect(() => {
+    const input = document.getElementById('search');
+    if (!input) return;
+    const onInput = (e) => setQ(e.target.value);
+    input.addEventListener('input', onInput);
+    return () => input.removeEventListener('input', onInput);
+  }, []);
+
+  const suggestions = useMemo(() => {
+    if (!q.trim()) return [];
+    const t = q.toLowerCase();
+    return products.filter((p) => [p.name, p.brand, p.category, p.sport].join(' ').toLowerCase().includes(t)).slice(0, 5).map((p) => p.name);
+  }, [q, products]);
+
+  const list = useMemo(() => {
+    let r = products;
+    if (category !== 'all') r = r.filter((x) => x.category === category);
+    if (gender !== 'all') r = r.filter((x) => x.gender === gender || x.gender === 'unisex');
+    if (sport !== 'all') r = r.filter((x) => x.sport === sport);
+    if (q.trim()) {
+      const t = q.toLowerCase();
+      r = r.filter((x) => [x.name, x.brand, x.category, x.desc].join(' ').toLowerCase().includes(t));
+    }
+    if (sort === 'price-asc') r = [...r].sort((a, b) => a.price - b.price);
+    if (sort === 'price-desc') r = [...r].sort((a, b) => b.price - a.price);
+    if (sort === 'new') r = [...r].sort((a, b) => Number(b.isNew) - Number(a.isNew));
+    return r;
+  }, [products, q, category, gender, sport, sort]);
+
+  return (
+    <section id="catalogue" className="section">
+      <div className="shop-head">
+        <h2>Tous les articles</h2>
+        <div className="shop-controls">
+          <select value={category} onChange={(e) => setCategory(e.target.value)}><option value="all">Catégorie</option><option value="sneakers">Sneakers</option><option value="vetements">Vêtements</option><option value="accessoires">Accessoires</option></select>
+          <select value={gender} onChange={(e) => setGender(e.target.value)}><option value="all">Genre</option><option value="homme">Homme</option><option value="femme">Femme</option><option value="enfant">Enfant</option></select>
+          <select value={sport} onChange={(e) => setSport(e.target.value)}><option value="all">Sport</option><option value="running">Running</option><option value="basket">Basket</option><option value="training">Training</option><option value="lifestyle">Lifestyle</option></select>
+          <select value={sort} onChange={(e) => setSort(e.target.value)}><option value="featured">Sélection</option><option value="new">Nouveautés</option><option value="price-asc">Prix croissant</option><option value="price-desc">Prix décroissant</option></select>
+        </div>
+      </div>
+      {suggestions.length ? <div className="suggestions">Suggestions: {suggestions.join(' • ')}</div> : null}
+      <div className="cards-3">{list.map((p) => <ProductCard key={p.id} p={p} onOpen={onOpen} onQuickAdd={onQuickAdd} />)}</div>
+    </section>
+  );
+}
+
+function ProductModal({ product, onClose, onAdd }) {
+  const [size, setSize] = useState(product?.sizes?.[0] || 'Unique');
+  if (!product) return null;
+  return (
+    <div className="admin-overlay" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <img src={product.image} alt={product.name} />
+        <div>
+          <small>{product.brand}</small>
+          <h3>{product.name}</h3>
+          <p>{product.desc}</p>
+          <label>Taille</label>
+          <select value={size} onChange={(e) => setSize(e.target.value)}>{product.sizes.map((s) => <option key={s}>{s}</option>)}</select>
+          <div className="hero-actions"><button onClick={() => onAdd(product, size)}>Ajouter au panier</button><button className="btn ghost" onClick={onClose}>Fermer</button></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CartDrawer({ open, onClose, cart, setCart }) {
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const shipping = subtotal >= 100 || subtotal === 0 ? 0 : 6.9;
+  const total = subtotal + shipping;
+  return (
+    <aside className={`drawer ${open ? 'show' : ''}`}>
+      <div className="drawer-head"><h3>Panier</h3><button onClick={onClose}>Fermer</button></div>
+      <div className="drawer-body">{cart.length === 0 ? <p>Ton panier est vide.</p> : cart.map((i) => <div className="line" key={i.key}><img src={i.image} alt={i.name} /><div><strong>{i.name}</strong><p>{i.size} - {i.price} EUR</p><div className="hero-actions"><button onClick={() => setCart((p) => p.map((x) => x.key === i.key ? { ...x, qty: Math.max(1, x.qty - 1) } : x))}>-</button><span>{i.qty}</span><button onClick={() => setCart((p) => p.map((x) => x.key === i.key ? { ...x, qty: x.qty + 1 } : x))}>+</button><button onClick={() => setCart((p) => p.filter((x) => x.key !== i.key))}>Suppr.</button></div></div></div>)}</div>
+      <div className="drawer-foot"><p>Sous-total: <strong>{subtotal.toFixed(2)} EUR</strong></p><p>Livraison: <strong>{shipping === 0 ? 'Offerte' : `${shipping.toFixed(2)} EUR`}</strong></p><p>Total: <strong>{total.toFixed(2)} EUR</strong></p><button>Payer</button></div>
+    </aside>
+  );
+}
+
+function BackOffice({ open, onClose, data, setData }) {
+  const [tab, setTab] = useState('produits');
+  if (!open) return null;
   return (
     <div className="admin-overlay" onClick={onClose}>
       <div className="admin" onClick={(e) => e.stopPropagation()}>
-        <div className="admin-head"><h3>Back Office - Vente</h3><button onClick={onClose}>Fermer</button></div>
-        <div className="admin-tabs">
-          {['hero', 'categories', 'produits', 'marque'].map((t) => <button key={t} className={tab === t ? 'active' : ''} onClick={() => setTab(t)}>{t}</button>)}
-        </div>
+        <div className="admin-head"><h3>Back Office Catalogue</h3><button onClick={onClose}>Fermer</button></div>
+        <div className="admin-tabs">{['hero', 'categories', 'produits'].map((t) => <button key={t} className={tab === t ? 'active' : ''} onClick={() => setTab(t)}>{t}</button>)}</div>
 
         {tab === 'hero' && (
           <section className="admin-section">
-            <input value={data.hero.accroche} onChange={(e) => updatePath(setData, ['hero', 'accroche'], e.target.value)} placeholder="Accroche" />
-            <textarea rows={4} value={data.hero.sousTexte} onChange={(e) => updatePath(setData, ['hero', 'sousTexte'], e.target.value)} />
-            <input value={data.hero.boutonPrincipal} onChange={(e) => updatePath(setData, ['hero', 'boutonPrincipal'], e.target.value)} />
-            <input value={data.hero.boutonSecondaire} onChange={(e) => updatePath(setData, ['hero', 'boutonSecondaire'], e.target.value)} />
-            <input value={data.hero.image} onChange={(e) => updatePath(setData, ['hero', 'image'], e.target.value)} placeholder="URL image" />
+            <input value={data.hero.title} onChange={(e) => updatePath(setData, ['hero', 'title'], e.target.value)} placeholder="Titre hero" />
+            <textarea rows={3} value={data.hero.subtitle} onChange={(e) => updatePath(setData, ['hero', 'subtitle'], e.target.value)} />
+            <input value={data.hero.image} onChange={(e) => updatePath(setData, ['hero', 'image'], e.target.value)} placeholder="URL image hero" />
             <label className="import-btn">Importer image hero<input type="file" accept="image/*" onChange={async (e) => {
-              const f = e.target.files?.[0];
-              if (!f) return;
-              const url = await fileToDataUrl(f);
-              updatePath(setData, ['hero', 'image'], url);
+              const f = e.target.files?.[0]; if (!f) return;
+              const url = await fileToDataUrl(f); updatePath(setData, ['hero', 'image'], url);
             }} /></label>
           </section>
         )}
@@ -264,14 +269,12 @@ function BackOffice({ open, onClose, data, setData }) {
         {tab === 'categories' && (
           <section className="admin-section">
             {data.categories.map((c, i) => (
-              <div className="admin-card" key={i}>
-                <input value={c.nom} onChange={(e) => updatePath(setData, ['categories', i, 'nom'], e.target.value)} />
-                <input value={c.image} onChange={(e) => updatePath(setData, ['categories', i, 'image'], e.target.value)} placeholder="URL image" />
+              <div className="admin-card" key={c.id}>
+                <input value={c.name} onChange={(e) => updatePath(setData, ['categories', i, 'name'], e.target.value)} />
+                <input value={c.image} onChange={(e) => updatePath(setData, ['categories', i, 'image'], e.target.value)} placeholder="URL image catégorie" />
                 <label>Importer image<input type="file" accept="image/*" onChange={async (e) => {
-                  const f = e.target.files?.[0];
-                  if (!f) return;
-                  const url = await fileToDataUrl(f);
-                  updatePath(setData, ['categories', i, 'image'], url);
+                  const f = e.target.files?.[0]; if (!f) return;
+                  const url = await fileToDataUrl(f); updatePath(setData, ['categories', i, 'image'], url);
                 }} /></label>
               </div>
             ))}
@@ -280,45 +283,29 @@ function BackOffice({ open, onClose, data, setData }) {
 
         {tab === 'produits' && (
           <section className="admin-section">
-            {data.produits.map((p, i) => (
+            {data.products.map((p, i) => (
               <div className="admin-card" key={p.id}>
-                <input value={p.nom} onChange={(e) => updatePath(setData, ['produits', i, 'nom'], e.target.value)} placeholder="Nom produit" />
-                <input value={p.marque} onChange={(e) => updatePath(setData, ['produits', i, 'marque'], e.target.value)} placeholder="Marque" />
-                <input type="number" value={p.prix} onChange={(e) => updatePath(setData, ['produits', i, 'prix'], Number(e.target.value || 0))} placeholder="Prix" />
-                <input value={p.categorie} onChange={(e) => updatePath(setData, ['produits', i, 'categorie'], e.target.value)} placeholder="Categorie" />
-                <textarea rows={3} value={p.description} onChange={(e) => updatePath(setData, ['produits', i, 'description'], e.target.value)} placeholder="Description" />
-                <input value={p.image} onChange={(e) => updatePath(setData, ['produits', i, 'image'], e.target.value)} placeholder="URL image" />
+                <input value={p.name} onChange={(e) => updatePath(setData, ['products', i, 'name'], e.target.value)} placeholder="Nom produit" />
+                <input value={p.brand} onChange={(e) => updatePath(setData, ['products', i, 'brand'], e.target.value)} placeholder="Marque" />
+                <input type="number" value={p.price} onChange={(e) => updatePath(setData, ['products', i, 'price'], Number(e.target.value || 0))} placeholder="Prix" />
+                <input type="number" value={p.oldPrice || 0} onChange={(e) => updatePath(setData, ['products', i, 'oldPrice'], Number(e.target.value || 0) || null)} placeholder="Ancien prix" />
+                <input value={p.category} onChange={(e) => updatePath(setData, ['products', i, 'category'], e.target.value)} placeholder="Catégorie" />
+                <input value={p.gender} onChange={(e) => updatePath(setData, ['products', i, 'gender'], e.target.value)} placeholder="Genre" />
+                <input value={p.sport} onChange={(e) => updatePath(setData, ['products', i, 'sport'], e.target.value)} placeholder="Sport" />
+                <textarea rows={2} value={p.desc} onChange={(e) => updatePath(setData, ['products', i, 'desc'], e.target.value)} placeholder="Description" />
+                <input value={p.image} onChange={(e) => updatePath(setData, ['products', i, 'image'], e.target.value)} placeholder="URL image" />
+                <input value={p.sizes.join(',')} onChange={(e) => updatePath(setData, ['products', i, 'sizes'], e.target.value.split(',').map((x) => x.trim()).filter(Boolean))} placeholder="Tailles: 40,41,42" />
                 <label>Importer image<input type="file" accept="image/*" onChange={async (e) => {
-                  const f = e.target.files?.[0];
-                  if (!f) return;
-                  const url = await fileToDataUrl(f);
-                  updatePath(setData, ['produits', i, 'image'], url);
+                  const f = e.target.files?.[0]; if (!f) return;
+                  const url = await fileToDataUrl(f); updatePath(setData, ['products', i, 'image'], url);
                 }} /></label>
+                <button onClick={() => setData((prev) => ({ ...prev, products: prev.products.filter((x) => x.id !== p.id) }))}>Supprimer</button>
               </div>
             ))}
             <button onClick={() => setData((prev) => ({
               ...prev,
-              produits: [...prev.produits, {
-                id: `p${Date.now()}`,
-                nom: 'Nouveau produit',
-                marque: 'Marque',
-                prix: 0,
-                categorie: 'Sneakers',
-                image: '',
-                description: 'Description',
-                tailles: ['Unique'],
-              }],
-            }))}>Ajouter produit</button>
-          </section>
-        )}
-
-        {tab === 'marque' && (
-          <section className="admin-section">
-            <input value={data.marque.nom} onChange={(e) => updatePath(setData, ['marque', 'nom'], e.target.value)} />
-            <input value={data.marque.baseline} onChange={(e) => updatePath(setData, ['marque', 'baseline'], e.target.value)} />
-            <input value={data.marque.adresse} onChange={(e) => updatePath(setData, ['marque', 'adresse'], e.target.value)} />
-            <input value={data.marque.telephone} onChange={(e) => updatePath(setData, ['marque', 'telephone'], e.target.value)} />
-            <input value={data.marque.email} onChange={(e) => updatePath(setData, ['marque', 'email'], e.target.value)} />
+              products: [...prev.products, { id: `p${Date.now()}`, name: 'Nouveau produit', brand: 'Street Sport', price: 0, oldPrice: null, category: 'sneakers', gender: 'unisex', sport: 'lifestyle', isNew: true, image: '', sizes: ['Unique'], desc: 'Description' }],
+            }))}>Ajouter un produit</button>
           </section>
         )}
       </div>
@@ -326,32 +313,42 @@ function BackOffice({ open, onClose, data, setData }) {
   );
 }
 
+function Footer({ data }) {
+  return <footer className="footer"><p>{data.brand.name} • {data.brand.tagline}</p><p>{data.brand.address}</p></footer>;
+}
+
 export default function App() {
-  const [data, setData] = useSiteData();
+  const [data, setData] = useData();
   const [selected, setSelected] = useState(null);
-  const [adminOpen, setAdminOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [cart, setCart] = useState([]);
+  const [viewed, setViewed] = useState([]);
+  const [adminOpen, setAdminOpen] = useState(false);
 
-  const count = cart.reduce((s, x) => s + x.qty, 0);
+  const cartCount = cart.reduce((s, i) => s + i.qty, 0);
 
-  const addToCart = (p, taille) => {
-    const key = `${p.id}-${taille}`;
+  const openProduct = (p) => {
+    setSelected(p);
+    setViewed((prev) => [...prev.filter((x) => x.id !== p.id), p].slice(-10));
+  };
+
+  const addToCart = (p, size = p.sizes?.[0] || 'Unique') => {
+    const key = `${p.id}-${size}`;
     setCart((prev) => {
       const ex = prev.find((x) => x.key === key);
-      if (ex) return prev.map((x) => (x.key === key ? { ...x, qty: x.qty + 1 } : x));
-      return [...prev, { key, id: p.id, nom: p.nom, image: p.image, prix: p.prix, taille, qty: 1 }];
+      if (ex) return prev.map((x) => x.key === key ? { ...x, qty: x.qty + 1 } : x);
+      return [...prev, { key, id: p.id, name: p.name, image: p.image, price: p.price, size, qty: 1 }];
     });
-    setSelected(null);
     setCartOpen(true);
   };
 
   return (
     <main>
-      <Header data={data} count={count} onCartOpen={() => setCartOpen(true)} />
+      <Header data={data} cartCount={cartCount} onOpenCart={() => setCartOpen(true)} />
       <Hero data={data} />
       <CategoryTiles data={data} />
-      <ProductGrid data={data} onOpen={setSelected} />
+      <Catalog products={data.products} onOpen={openProduct} onQuickAdd={addToCart} />
+      <SmartRecommendations viewed={viewed} all={data.products} onOpen={openProduct} onQuickAdd={addToCart} />
       <Footer data={data} />
 
       <button className="admin-fab" onClick={() => setAdminOpen(true)}>Back Office</button>
