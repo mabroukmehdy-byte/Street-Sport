@@ -96,7 +96,7 @@ function useReveal() {
 function Header({ data, cartCount, onOpenCart }) {
   return (
     <header className="topbar">
-      <div className="topline">Livraison offerte dès 100 EUR • Retours 30 jours</div>
+      <div className="topline">Livraison offerte dès 100 EUR • DERNIÈRES COLLECTIONS</div>
       <div className="navline">
         <p className="brand">{data.brand.name}</p>
         <div className="quick-links">
