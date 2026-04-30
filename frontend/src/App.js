@@ -575,6 +575,7 @@ function BackOffice({ open, onClose, data, setData, saveError }) {
   const [savedProductId, setSavedProductId] = useState('');
   const [savedHeroId, setSavedHeroId] = useState('');
   const [savedCategoryId, setSavedCategoryId] = useState('');
+  const [sizeDrafts, setSizeDrafts] = useState({});
   const slugify = (v) => String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const productCategoryOptions = useMemo(() => {
     return [
@@ -753,7 +754,26 @@ function BackOffice({ open, onClose, data, setData, saveError }) {
                   updatePath(setData, ['products', i, 'images'], imgs);
                   if (imgs[0]) updatePath(setData, ['products', i, 'image'], imgs[0]);
                 }} placeholder="URLs images (une par ligne)" />
-                <input value={p.sizes.join(',')} onChange={(e) => updatePath(setData, ['products', i, 'sizes'], e.target.value.split(',').map((x) => x.trim()).filter(Boolean))} placeholder="Tailles: 40,41,42" />
+                <div className="sizes-editor">
+                  <small>Tailles</small>
+                  <div className="sizes-list">
+                    {(p.sizes || []).map((s) => (
+                      <button key={`${p.id}-${s}`} type="button" className="size-chip" onClick={() => updatePath(setData, ['products', i, 'sizes'], (p.sizes || []).filter((x) => x !== s))}>
+                        {s} ×
+                      </button>
+                    ))}
+                  </div>
+                  <div className="sizes-add">
+                    <input value={sizeDrafts[p.id] || ''} onChange={(e) => setSizeDrafts((prev) => ({ ...prev, [p.id]: e.target.value }))} placeholder="Nouvelle taille (ex: 45)" />
+                    <button type="button" onClick={() => {
+                      const value = (sizeDrafts[p.id] || '').trim();
+                      if (!value) return;
+                      const next = [...new Set([...(p.sizes || []), value])];
+                      updatePath(setData, ['products', i, 'sizes'], next);
+                      setSizeDrafts((prev) => ({ ...prev, [p.id]: '' }));
+                    }}>Ajouter taille</button>
+                  </div>
+                </div>
                 <label>Importer image(s)<input type="file" accept="image/*" multiple onChange={async (e) => {
                   const files = Array.from(e.target.files || []);
                   if (!files.length) return;

@@ -532,6 +532,31 @@ button {
   pointer-events: none;
 }
 
+.sizes-editor {
+  display: grid;
+  gap: 8px;
+}
+
+.sizes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.size-chip {
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  color: #fff;
+  padding: 6px 8px;
+  font-size: .78rem;
+}
+
+.sizes-add {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+}
+
 .drawer {
   position: fixed;
   right: -440px;
