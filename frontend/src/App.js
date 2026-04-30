@@ -1,114 +1,172 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect } from 'react';
 import '@fontsource/anton';
 import '@fontsource/manrope/400.css';
 import '@fontsource/manrope/700.css';
 import './index.css';
-import { CATEGORIES, PRODUCTS, STORE_INFO } from './mock';
-import { CartProvider, useCart } from './context/CartContext';
 
-function Header({ page, setPage }) {
-  const { count, setOpen } = useCart();
-  const tabs = [
-    ['home', 'Accueil'],
-    ['shop', 'Boutique'],
-    ['about', 'A propos'],
-    ['contact', 'Contact'],
-  ];
+const LOOKS = [
+  {
+    title: 'Concrete Silence',
+    mood: 'Monochrome tactical layers',
+    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1600&q=80',
+  },
+  {
+    title: 'Neon Discipline',
+    mood: 'Technical sport pieces with red signal accents',
+    image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1600&q=80',
+  },
+  {
+    title: 'Midnight Motion',
+    mood: 'Performance cuts for Paris night runs',
+    image: 'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=1600&q=80',
+  },
+];
+
+const MANIFESTO = [
+  'No fake luxury.',
+  'No trend-chasing.',
+  'Only silhouette, function, and impact.',
+];
+
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('revealed');
+        });
+      },
+      { threshold: 0.18 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+}
+
+function Header() {
   return (
     <header className="topbar">
-      <div className="brand" onClick={() => setPage('home')}>Street Sport</div>
-      <nav>{tabs.map(([id, label]) => <button key={id} className={page === id ? 'active' : ''} onClick={() => setPage(id)}>{label}</button>)}</nav>
-      <button className="cart-btn" onClick={() => setOpen(true)}>Panier ({count})</button>
+      <p className="brand">STREET SPORT / PARIS XVIII</p>
+      <a href="#contact" className="cta-link">BOOK A STYLE SESSION</a>
     </header>
   );
 }
 
-function Home({ setPage }) {
+function Hero() {
   return (
-    <section className="hero fadein">
-      <p className="kicker">PARIS 18</p>
-      <h1>L'UNIFORME DE LA RUE</h1>
-      <p>{STORE_INFO.tagline}</p>
-      <div className="row"><button onClick={() => setPage('shop')}>Shopper</button><button className="ghost" onClick={() => setPage('about')}>Le shop</button></div>
+    <section className="hero reveal">
+      <div className="noise" aria-hidden="true" />
+      <p className="eyebrow">URBAN PERFORMANCE ATELIER</p>
+      <h1>
+        WE DON'T SELL CLOTHES.
+        <br />
+        WE BUILD PRESENCE.
+      </h1>
+      <p className="lead">
+        Street Sport is now a creative studio for image, silhouette, and street attitude.
+        We design how people are seen before they are heard.
+      </p>
+      <a href="#manifesto" className="hero-btn">ENTER THE MANIFESTO</a>
     </section>
   );
 }
 
-function Shop({ onOpen }) {
-  const [cat, setCat] = useState('all');
-  const list = useMemo(() => (cat === 'all' ? PRODUCTS : PRODUCTS.filter((p) => p.category === cat)), [cat]);
+function Manifesto() {
   return (
-    <section className="page fadein">
-      <h2>Boutique</h2>
-      <div className="chips">{CATEGORIES.map((c) => <button key={c.id} className={cat === c.id ? 'active' : ''} onClick={() => setCat(c.id)}>{c.label}</button>)}</div>
-      <div className="grid">{list.map((p) => <article className="card" key={p.id} onClick={() => onOpen(p)}><img src={p.image} alt={p.name} /><div><strong>{p.name}</strong><p>{p.brand}</p><span>{p.price} EUR</span></div></article>)}</div>
-    </section>
-  );
-}
-
-function ProductModal({ product, onClose }) {
-  const { addItem } = useCart();
-  const [size, setSize] = useState(product?.sizes?.[0] || 'Unique');
-  if (!product) return null;
-  return (
-    <div className="overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <img src={product.image} alt={product.name} />
-        <div>
-          <h3>{product.name}</h3>
-          <p>{product.desc}</p>
-          <label>Taille</label>
-          <select value={size} onChange={(e) => setSize(e.target.value)}>{product.sizes.map((s) => <option key={s}>{s}</option>)}</select>
-          <div className="row"><strong>{product.price} EUR</strong><button onClick={() => addItem(product, size)}>Ajouter</button></div>
-        </div>
+    <section id="manifesto" className="manifesto reveal">
+      <div className="section-title">
+        <p>Manifesto</p>
+        <h2>Cut to essentials</h2>
       </div>
-    </div>
+      <div className="manifesto-grid">
+        {MANIFESTO.map((line, idx) => (
+          <article key={line} style={{ transitionDelay: `${idx * 120}ms` }}>
+            <span>0{idx + 1}</span>
+            <p>{line}</p>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 
-function CartDrawer() {
-  const { open, setOpen, items, setQty, removeItem, subtotal } = useCart();
+function Lookbook() {
   return (
-    <aside className={`drawer ${open ? 'show' : ''}`}>
-      <div className="drawer-head"><h3>Panier</h3><button onClick={() => setOpen(false)}>Fermer</button></div>
-      <div className="drawer-body">{items.length === 0 ? <p>Ton panier est vide.</p> : items.map((it) => <div className="line" key={it.key}><img src={it.image} alt={it.name} /><div><strong>{it.name}</strong><p>{it.size} - {it.price} EUR</p><div className="row"><button onClick={() => setQty(it.key, it.qty - 1)}>-</button><span>{it.qty}</span><button onClick={() => setQty(it.key, it.qty + 1)}>+</button><button className="ghost" onClick={() => removeItem(it.key)}>Suppr.</button></div></div></div>)}</div>
-      <div className="drawer-foot"><strong>Total: {subtotal} EUR</strong><button>Payer</button></div>
-    </aside>
+    <section className="lookbook reveal">
+      <div className="section-title">
+        <p>Lookbook</p>
+        <h2>Visual direction, not catalog</h2>
+      </div>
+      <div className="look-grid">
+        {LOOKS.map((look, idx) => (
+          <article key={look.title} className={`look-card look-${idx + 1}`} style={{ transitionDelay: `${idx * 120}ms` }}>
+            <img src={look.image} alt={look.title} />
+            <div>
+              <h3>{look.title}</h3>
+              <p>{look.mood}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 
-function About() {
-  return <section className="page fadein"><h2>A propos</h2><p>Street Sport propose sneakers, vetements et accessoires selectionnes pour le style urbain. Adresse: {STORE_INFO.address}</p></section>;
+function Signature() {
+  return (
+    <section className="signature reveal">
+      <div>
+        <p className="eyebrow">SIGNATURE EXPERIENCE</p>
+        <h2>One-on-one styling and visual identity for athletes, artists, and founders.</h2>
+      </div>
+      <ul>
+        <li>Style diagnostics by silhouette and movement</li>
+        <li>Outfit architecture for shoots and daily wear</li>
+        <li>Personal color and material direction</li>
+        <li>Quarterly wardrobe reset</li>
+      </ul>
+    </section>
+  );
 }
 
 function Contact() {
   return (
-    <section className="page fadein">
-      <h2>Contact</h2>
-      <p>Tel: {STORE_INFO.phone}</p>
-      <p>Email: {STORE_INFO.email}</p>
-      <p>{STORE_INFO.address}</p>
-      <form className="newsletter" onSubmit={(e) => e.preventDefault()}><label>Newsletter</label><div className="row"><input type="email" placeholder="ton@email.com" /><button>S'inscrire</button></div></form>
+    <section id="contact" className="contact reveal">
+      <div className="section-title">
+        <p>Contact</p>
+        <h2>Request your private session</h2>
+      </div>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <input placeholder="Full name" />
+        <input placeholder="Email" type="email" />
+        <textarea placeholder="What image are you trying to project?" rows={5} />
+        <button>APPLY NOW</button>
+      </form>
     </section>
   );
 }
 
-function AppContent() {
-  const [page, setPage] = useState('home');
-  const [selected, setSelected] = useState(null);
+function Footer() {
   return (
-    <>
-      <Header page={page} setPage={setPage} />
-      {page === 'home' && <Home setPage={setPage} />}
-      {page === 'shop' && <Shop onOpen={setSelected} />}
-      {page === 'about' && <About />}
-      {page === 'contact' && <Contact />}
-      <CartDrawer />
-      <ProductModal product={selected} onClose={() => setSelected(null)} />
-    </>
+    <footer className="footer reveal revealed">
+      <p>30 Bd Ornano, 75018 Paris</p>
+      <p>Street Sport Creative Studio</p>
+    </footer>
   );
 }
 
 export default function App() {
-  return <CartProvider><AppContent /></CartProvider>;
+  useReveal();
+  return (
+    <main>
+      <Header />
+      <Hero />
+      <Manifesto />
+      <Lookbook />
+      <Signature />
+      <Contact />
+      <Footer />
+    </main>
+  );
 }
