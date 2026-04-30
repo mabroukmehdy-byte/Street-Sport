@@ -5,6 +5,17 @@ import '@fontsource/manrope/700.css';
 import './index.css';
 
 const STORAGE_KEY = 'streetsport_nike_visual_bo_v1';
+
+const BRANDS = [
+  { name: 'NIKE', logo: 'https://logo.clearbit.com/nike.com' },
+  { name: 'MIZUNO', logo: 'https://logo.clearbit.com/mizuno.com' },
+  { name: 'ASICS', logo: 'https://logo.clearbit.com/asics.com' },
+  { name: 'UNDER ARMOUR', logo: 'https://logo.clearbit.com/underarmour.com' },
+  { name: 'RALPH LAUREN', logo: 'https://logo.clearbit.com/ralphlauren.com' },
+  { name: 'NIKE ACG', logo: 'https://logo.clearbit.com/nike.com' },
+  { name: 'SCOTT', logo: 'https://logo.clearbit.com/scott-sports.com' },
+  { name: 'HELLY HANSEN', logo: 'https://logo.clearbit.com/hellyhansen.com' },
+];
 const ADMIN_SESSION_KEY = 'streetsport_admin_session_v1';
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'StreetSport2026!';
@@ -95,22 +106,12 @@ function useReveal() {
 
 
 function BrandStrip() {
-  const brands = [
-    'NIKE',
-    'MIZUNO',
-    'ASICS',
-    'UNDER ARMOUR',
-    'RALPH LAUREN',
-    'NIKE ACG',
-    'SCOTT',
-    'HELLY HANSEN',
-  ];
-  const doubled = brands.concat(brands);
+  const doubled = BRANDS.concat(BRANDS);
   return (
     <div className="brand-strip" aria-label="Marques disponibles">
       <div className="brand-track">
         {doubled.map((b, i) => (
-          <span key={`${b}-${i}`}>{b}</span>
+          <span key={`${b.name}-${i}`}>{b.name}</span>
         ))}
       </div>
     </div>
@@ -154,35 +155,15 @@ function Header({ data, cartCount, onOpenCart }) {
 function CategoryExplorer({ data }) {
   return (
     <section id="nouveautes" className="section reveal compact-section">
-      <div className="mini-highlight">
-        <p className="eyebrow">Sélection rapide</p>
-        <h2>Nouveautés de la semaine</h2>
-        <p>Sneakers, vêtements et accessoires prêts à expédier.</p>
+      <div className="mini-highlight logo-highlight">
+        <img src="https://street-sport.fr/wp-content/uploads/2024/07/street-sport-logo.png" alt="Street Sport Paris 18" />
       </div>
 
       <div className="photo-marquee" aria-label="Banderole logos marques">
         <div className="photo-track logo-track">
-          {[
-            { name: 'Nike', src: 'https://logo.clearbit.com/nike.com' },
-            { name: 'Mizuno', src: 'https://logo.clearbit.com/mizuno.com' },
-            { name: 'Asics', src: 'https://logo.clearbit.com/asics.com' },
-            { name: 'Under Armour', src: 'https://logo.clearbit.com/underarmour.com' },
-            { name: 'Ralph Lauren', src: 'https://logo.clearbit.com/ralphlauren.com' },
-            { name: 'Nike ACG', src: 'https://logo.clearbit.com/nike.com' },
-            { name: 'Scott', src: 'https://logo.clearbit.com/scott-sports.com' },
-            { name: 'Helly Hansen', src: 'https://logo.clearbit.com/hellyhansen.com' },
-          ].concat([
-            { name: 'Nike', src: 'https://logo.clearbit.com/nike.com' },
-            { name: 'Mizuno', src: 'https://logo.clearbit.com/mizuno.com' },
-            { name: 'Asics', src: 'https://logo.clearbit.com/asics.com' },
-            { name: 'Under Armour', src: 'https://logo.clearbit.com/underarmour.com' },
-            { name: 'Ralph Lauren', src: 'https://logo.clearbit.com/ralphlauren.com' },
-            { name: 'Nike ACG', src: 'https://logo.clearbit.com/nike.com' },
-            { name: 'Scott', src: 'https://logo.clearbit.com/scott-sports.com' },
-            { name: 'Helly Hansen', src: 'https://logo.clearbit.com/hellyhansen.com' },
-          ]).map((b, i) => (
+          {BRANDS.concat(BRANDS).map((b, i) => (
             <div key={`${b.name}-${i}`} className="logo-tile">
-              <img src={b.src} alt={b.name} />
+              <img src={b.logo} alt={b.name} />
             </div>
           ))}
         </div>
