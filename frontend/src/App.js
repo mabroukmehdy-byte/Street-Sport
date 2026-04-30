@@ -174,15 +174,7 @@ function Header({ data, cartCount, onOpenCart }) {
       <BrandStrip />
       <div className="navline">
         <div className="brand-block">
-          <p className="brand">New Sport</p>
-          <div className="brand-sub">
-            <a href="#nouveautes">Homme</a>
-            <a href="#nouveautes">Femme</a>
-          </div>
-        </div>
-        <div className="quick-links">
-          <a href="#nouveautes">Sneakers</a>
-          <a href="#catalogue">Catalogue</a>
+          <p className="brand">Street Sport Paris</p>
         </div>
         <input className="search" id="search" placeholder="Rechercher chaussures, vêtements, accessoires" />
         <button className="cart-chip" onClick={onOpenCart}>Panier ({cartCount})</button>
