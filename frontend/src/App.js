@@ -138,10 +138,14 @@ function Header({ data, cartCount, onOpenCart }) {
       <div className="topline">Livraison offerte dès 100 EUR • DERNIÈRES COLLECTIONS</div>
       <BrandStrip />
       <div className="navline">
-        <p className="brand">{data.brand.name}</p>
+        <div className="brand-block">
+          <p className="brand">New Sport</p>
+          <div className="brand-sub">
+            <a href="#nouveautes">Homme</a>
+            <a href="#nouveautes">Femme</a>
+          </div>
+        </div>
         <div className="quick-links">
-          <a href="#nouveautes">Homme</a>
-          <a href="#nouveautes">Femme</a>
           <a href="#nouveautes">Sneakers</a>
           <a href="#catalogue">Catalogue</a>
         </div>
@@ -155,8 +159,12 @@ function Header({ data, cartCount, onOpenCart }) {
 function CategoryExplorer({ data }) {
   return (
     <section id="nouveautes" className="section reveal compact-section">
-      <div className="mini-highlight logo-highlight">
-        <img src="https://street-sport.fr/wp-content/uploads/2024/07/street-sport-logo.png" alt="Street Sport Paris 18" />
+      <div className="mini-highlight logo-highlight" aria-label="Logo Street Sport Paris 18">
+        <div className="ss-logo-box">
+          <div className="ss-logo-line">
+            <span>STREETSP</span><span className="o-red">O</span><span>RT</span>
+          </div>
+        </div>
       </div>
 
       <div className="photo-marquee" aria-label="Banderole logos marques">

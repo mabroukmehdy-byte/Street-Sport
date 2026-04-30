@@ -855,3 +855,46 @@ body.is-desktop .product-card:hover {
   height: auto;
   object-fit: contain;
 }
+
+.brand-block {
+  display: grid;
+  gap: 4px;
+}
+
+.brand-sub {
+  display: flex;
+  gap: 8px;
+}
+
+.brand-sub a {
+  text-decoration: none;
+  color: #ddd;
+  font-size: .78rem;
+  letter-spacing: .06em;
+}
+
+.logo-highlight {
+  background: linear-gradient(180deg, #0d3a60, #0a2e4d);
+}
+
+.ss-logo-box {
+  border: 3px solid #fff;
+  padding: 10px 20px;
+  background: rgba(0,0,0,.06);
+}
+
+.ss-logo-line {
+  font-family: Anton, sans-serif;
+  color: #fff;
+  letter-spacing: .04em;
+  font-size: clamp(1.6rem, 7vw, 3.6rem);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.ss-logo-line .o-red {
+  color: #e33a34;
+}
+
