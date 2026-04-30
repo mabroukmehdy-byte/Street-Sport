@@ -510,25 +510,24 @@ function BackOffice({ open, onClose, data, setData }) {
   const [productCategoryFilter, setProductCategoryFilter] = useState('all');
   const slugify = (v) => String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const productCategoryOptions = useMemo(() => {
-    const top = (data.categories || []).map((c) => ({ value: c.id, label: c.name }));
-    const fromNav = Object.entries(data.nav || {}).flatMap(([parent, children]) =>
-      (children || []).map((child) => {
-        const parentId = slugify(parent);
-        const childId = slugify(child);
-        return {
-          value: `${parentId}/${childId}`,
-          label: `${parent.charAt(0).toUpperCase() + parent.slice(1)} > ${child}`,
-        };
-      }),
-    );
-    const merged = [...top, ...fromNav];
-    const seen = new Set();
-    return merged.filter((o) => {
-      if (!o.value || seen.has(o.value)) return false;
-      seen.add(o.value);
-      return true;
-    });
-  }, [data.categories, data.nav]);
+    return [
+      { value: 'sneakers', label: 'Sneakers' },
+      { value: 'vetements', label: 'Vêtements' },
+      { value: 'accessoires', label: 'Accessoires' },
+    ];
+  }, []);
+  const productGenderOptions = useMemo(() => ([
+    { value: 'homme', label: 'Homme' },
+    { value: 'femme', label: 'Femme' },
+    { value: 'enfant', label: 'Enfant' },
+    { value: 'unisex', label: 'Unisex' },
+  ]), []);
+  const productSportOptions = useMemo(() => ([
+    { value: 'running', label: 'Running' },
+    { value: 'basket', label: 'Basket' },
+    { value: 'training', label: 'Training' },
+    { value: 'lifestyle', label: 'Lifestyle' },
+  ]), []);
   if (!open) return null;
   return (
     <div className="admin-overlay" onClick={onClose}>
@@ -645,8 +644,14 @@ function BackOffice({ open, onClose, data, setData }) {
                   {!productCategoryOptions.some((o) => o.value === p.category) ? <option value={p.category}>{p.category}</option> : null}
                   {productCategoryOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                 </select>
-                <input value={p.gender} onChange={(e) => updatePath(setData, ['products', i, 'gender'], e.target.value)} placeholder="Genre" />
-                <input value={p.sport} onChange={(e) => updatePath(setData, ['products', i, 'sport'], e.target.value)} placeholder="Sport" />
+                <select value={p.gender} onChange={(e) => updatePath(setData, ['products', i, 'gender'], e.target.value)}>
+                  {!productGenderOptions.some((o) => o.value === p.gender) ? <option value={p.gender}>{p.gender}</option> : null}
+                  {productGenderOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+                <select value={p.sport} onChange={(e) => updatePath(setData, ['products', i, 'sport'], e.target.value)}>
+                  {!productSportOptions.some((o) => o.value === p.sport) ? <option value={p.sport}>{p.sport}</option> : null}
+                  {productSportOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
                 <textarea rows={2} value={p.desc} onChange={(e) => updatePath(setData, ['products', i, 'desc'], e.target.value)} placeholder="Description" />
                 <input value={p.image} onChange={(e) => updatePath(setData, ['products', i, 'image'], e.target.value)} placeholder="URL image" />
                 <input value={p.sizes.join(',')} onChange={(e) => updatePath(setData, ['products', i, 'sizes'], e.target.value.split(',').map((x) => x.trim()).filter(Boolean))} placeholder="Tailles: 40,41,42" />
