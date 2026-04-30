@@ -241,11 +241,13 @@ function CategoryExplorer({ data }) {
 
 function ProductCard({ p, onOpen, onQuickAdd }) {
   const discount = p.oldPrice ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100) : 0;
+  const pretty = (v) => String(v || '').replaceAll('-', ' ').replace(/\b\w/g, (m) => m.toUpperCase());
+  const meta = [p.brand, pretty(p.gender), pretty(p.category), p.subcategory ? pretty(p.subcategory) : null].filter(Boolean).join(' • ');
   return (
     <article className="product-card">
       <button className="img-btn" onClick={() => onOpen(p)}><SafeImg src={p.image} alt={p.name} eager /></button>
       <div>
-        <small>{p.brand} • {p.gender}</small>
+        <small>{meta}</small>
         <h3>{p.name}</h3>
         <p><strong>{p.price} EUR</strong>{p.oldPrice ? <span className="old">{p.oldPrice} EUR</span> : null}{discount > 0 ? <span className="sale">-{discount}%</span> : null}</p>
         <div className="card-actions"><button onClick={() => onOpen(p)}>Voir</button><button onClick={() => onQuickAdd(p)}>Ajout rapide</button></div>
@@ -321,12 +323,13 @@ function Catalog({ products, onOpen, onQuickAdd }) {
 function ProductModal({ product, onClose, onAdd }) {
   const [size, setSize] = useState(product?.sizes?.[0] || 'Unique');
   if (!product) return null;
+  const pretty = (v) => String(v || '').replaceAll('-', ' ').replace(/\b\w/g, (m) => m.toUpperCase());
   return (
     <div className="admin-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <SafeImg src={product.image} alt={product.name} eager />
         <div>
-          <small>{product.brand}</small>
+          <small>{[product.brand, pretty(product.gender), pretty(product.category), product.subcategory ? pretty(product.subcategory) : null].filter(Boolean).join(' • ')}</small>
           <h3>{product.name}</h3>
           <p>{product.desc}</p>
           <label>Taille</label>
