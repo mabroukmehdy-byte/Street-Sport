@@ -307,10 +307,6 @@ function SmartRecommendations({ viewed, all, onOpen, onQuickAdd }) {
 function Catalog({ products, onOpen, onQuickAdd }) {
   const [q, setQ] = useState('');
   const [category, setCategory] = useState('all');
-  const [gender, setGender] = useState('all');
-  const [sport, setSport] = useState('all');
-  const [subcategory, setSubcategory] = useState('all');
-  const [sort, setSort] = useState('featured');
 
   useEffect(() => {
     const input = document.getElementById('search');
@@ -326,17 +322,6 @@ function Catalog({ products, onOpen, onQuickAdd }) {
     return products.filter((p) => [p.name, p.brand, p.category, p.sport].join(' ').toLowerCase().includes(t)).slice(0, 5).map((p) => p.name);
   }, [q, products]);
 
-  const subcategoryOptions = useMemo(() => {
-    const seen = new Set();
-    return products
-      .map((p) => p.subcategory)
-      .filter(Boolean)
-      .filter((s) => {
-        if (seen.has(s)) return false;
-        seen.add(s);
-        return true;
-      });
-  }, [products]);
   const categoryOptions = useMemo(() => {
     const seen = new Set();
     return products
@@ -352,16 +337,12 @@ function Catalog({ products, onOpen, onQuickAdd }) {
   const list = useMemo(() => {
     let r = products;
     if (category !== 'all') r = r.filter((x) => x.category === category);
-    if (gender !== 'all') r = r.filter((x) => x.gender === gender || x.gender === 'unisex');
-    if (sport !== 'all') r = r.filter((x) => x.sport === sport);
-    if (subcategory !== 'all') r = r.filter((x) => (x.subcategory || '') === subcategory);
     if (q.trim()) {
       const t = q.toLowerCase();
       r = r.filter((x) => [x.name, x.brand, x.category, x.subcategory || '', x.desc].join(' ').toLowerCase().includes(t));
     }
-    if (sort === 'new') r = [...r].sort((a, b) => Number(b.isNew) - Number(a.isNew));
     return r;
-  }, [products, q, category, gender, sport, subcategory, sort]);
+  }, [products, q, category]);
 
   return (
     <section id="catalogue" className="section reveal">
@@ -372,13 +353,6 @@ function Catalog({ products, onOpen, onQuickAdd }) {
             <option value="all">Catégorie</option>
             {categoryOptions.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
-          <select value={gender} onChange={(e) => setGender(e.target.value)}><option value="all">Genre</option><option value="homme">Homme</option><option value="femme">Femme</option><option value="enfant">Enfant</option></select>
-          <select value={sport} onChange={(e) => setSport(e.target.value)}><option value="all">Sport</option><option value="running">Running</option><option value="basket">Basket</option><option value="training">Training</option><option value="lifestyle">Lifestyle</option></select>
-          <select value={subcategory} onChange={(e) => setSubcategory(e.target.value)}>
-            <option value="all">Sous-catégorie</option>
-            {subcategoryOptions.map((s) => <option key={s} value={s}>{s}</option>)}
-          </select>
-          <select value={sort} onChange={(e) => setSort(e.target.value)}><option value="featured">Sélection</option><option value="new">Nouveautés</option></select>
         </div>
       </div>
       {suggestions.length ? <div className="suggestions">Suggestions: {suggestions.join(' • ')}</div> : null}
