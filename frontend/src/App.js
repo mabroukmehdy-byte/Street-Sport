@@ -120,6 +120,25 @@ function SafeImg({ src, alt, className, eager = false }) {
   );
 }
 
+function BrandLogoTile({ brand }) {
+  const [failed, setFailed] = useState(false);
+  return (
+    <div className="logo-tile">
+      {!failed ? (
+        <img
+          src={brand.logo}
+          alt={brand.name}
+          loading="eager"
+          decoding="async"
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <span className="logo-fallback">{brand.name}</span>
+      )}
+    </div>
+  );
+}
+
 
 function BrandStrip() {
   const doubled = BRANDS.concat(BRANDS);
@@ -187,9 +206,7 @@ function CategoryExplorer({ data }) {
       <div className="photo-marquee" aria-label="Banderole logos marques">
         <div className="photo-track logo-track">
           {BRANDS.concat(BRANDS).map((b, i) => (
-            <div key={`${b.name}-${i}`} className="logo-tile">
-              <SafeImg src={b.logo} alt={b.name} />
-            </div>
+            <BrandLogoTile key={`${b.name}-${i}`} brand={b} />
           ))}
         </div>
       </div>

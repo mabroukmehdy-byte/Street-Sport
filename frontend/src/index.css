@@ -827,6 +827,17 @@ select:focus {
   filter: grayscale(1);
 }
 
+.logo-fallback {
+  display: block;
+  padding: 0 8px;
+  text-align: center;
+  font-family: Anton, sans-serif;
+  font-size: .8rem;
+  letter-spacing: .05em;
+  color: #111;
+  line-height: 1.15;
+}
+
 /* Auto adaptation device */
 body.is-mobile .topline {
   font-size: .74rem;
