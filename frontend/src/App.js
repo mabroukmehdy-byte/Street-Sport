@@ -5,6 +5,9 @@ import '@fontsource/manrope/700.css';
 import './index.css';
 
 const STORAGE_KEY = 'streetsport_nike_visual_bo_v1';
+const ADMIN_SESSION_KEY = 'streetsport_admin_session_v1';
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'StreetSport2026!';
 
 const seedProducts = [
   { id: 'p1', name: 'Velocity Air One', brand: 'Street Sport', price: 129, oldPrice: 149, category: 'sneakers', gender: 'homme', sport: 'running', isNew: true, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80', sizes: ['40', '41', '42', '43', '44'], desc: 'Amorti réactif et empeigne respirante.' },
@@ -304,13 +307,45 @@ function CartDrawer({ open, onClose, cart, setCart }) {
   );
 }
 
+
+function AdminLogin({ onSuccess, onClose }) {
+  const [user, setUser] = useState('');
+  const [pass, setPass] = useState('');
+  const [error, setError] = useState('');
+
+  const submit = (e) => {
+    e.preventDefault();
+    if (user === ADMIN_USER && pass === ADMIN_PASS) {
+      localStorage.setItem(ADMIN_SESSION_KEY, '1');
+      onSuccess();
+      return;
+    }
+    setError('Identifiants invalides');
+  };
+
+  return (
+    <div className="admin-overlay" onClick={onClose}>
+      <form className="admin-login" onClick={(e) => e.stopPropagation()} onSubmit={submit}>
+        <h3>Connexion Back Office</h3>
+        <input placeholder="Identifiant" value={user} onChange={(e) => setUser(e.target.value)} />
+        <input placeholder="Mot de passe" type="password" value={pass} onChange={(e) => setPass(e.target.value)} />
+        {error ? <p className="error">{error}</p> : null}
+        <div className="hero-actions">
+          <button type="submit">Se connecter</button>
+          <button type="button" className="btn ghost" onClick={onClose}>Annuler</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
 function BackOffice({ open, onClose, data, setData }) {
   const [tab, setTab] = useState('produits');
   if (!open) return null;
   return (
     <div className="admin-overlay" onClick={onClose}>
       <div className="admin" onClick={(e) => e.stopPropagation()}>
-        <div className="admin-head"><h3>Back Office Catalogue</h3><button onClick={onClose}>Fermer</button></div>
+        <div className="admin-head"><h3>Back Office Catalogue</h3><div className="hero-actions"><button onClick={() => { localStorage.removeItem(ADMIN_SESSION_KEY); onClose(); }}>Déconnexion</button><button onClick={onClose}>Fermer</button></div></div>
         <div className="admin-tabs">{['hero', 'categories', 'produits'].map((t) => <button key={t} className={tab === t ? 'active' : ''} onClick={() => setTab(t)}>{t}</button>)}</div>
 
         {tab === 'hero' && (
@@ -384,8 +419,14 @@ export default function App() {
   const [cart, setCart] = useState([]);
   const [viewed, setViewed] = useState([]);
   const [adminOpen, setAdminOpen] = useState(false);
+  const [adminAuth, setAdminAuth] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
 
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
+
+  useEffect(() => {
+    if (localStorage.getItem(ADMIN_SESSION_KEY) === '1') setAdminAuth(true);
+  }, []);
 
   const openProduct = (p) => {
     setSelected(p);
@@ -410,11 +451,12 @@ export default function App() {
       <SmartRecommendations viewed={viewed} all={data.products} onOpen={openProduct} onQuickAdd={addToCart} />
       <Footer data={data} />
 
-      <div className="admin-end-wrap"><button className="admin-fab" onClick={() => setAdminOpen(true)}>Back Office</button></div>
+      <div className="admin-end-wrap"><button className="admin-fab" onClick={() => { if (adminAuth) setAdminOpen(true); else setLoginOpen(true); }}>Back Office</button></div>
 
       <ProductModal product={selected} onClose={() => setSelected(null)} onAdd={addToCart} />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} setCart={setCart} />
       <BackOffice open={adminOpen} onClose={() => setAdminOpen(false)} data={data} setData={setData} />
+      {loginOpen ? <AdminLogin onSuccess={() => { setAdminAuth(true); setLoginOpen(false); setAdminOpen(true); }} onClose={() => setLoginOpen(false)} /> : null}
     </main>
   );
 }

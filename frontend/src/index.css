@@ -655,3 +655,22 @@ select:focus {
     scroll-behavior: auto !important;
   }
 }
+
+.admin-login {
+  width: min(420px, 100%);
+  border: 1px solid var(--line);
+  background: #0b0b0b;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.admin-login h3 {
+  margin: 0 0 6px;
+}
+
+.admin-login .error {
+  margin: 0;
+  color: #ff8d86;
+  font-size: .9rem;
+}
