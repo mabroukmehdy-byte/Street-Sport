@@ -353,18 +353,32 @@ function Catalog({ products, onOpen, onQuickAdd }) {
 function ProductModal({ product, onClose, onAdd }) {
   const [size, setSize] = useState(product?.sizes?.[0] || 'Unique');
   const [active, setActive] = useState(0);
+  const [touchStartX, setTouchStartX] = useState(null);
   useEffect(() => { setActive(0); }, [product?.id]);
   if (!product) return null;
   const gallery = (product.images && product.images.length ? product.images : [product.image]).filter(Boolean);
+  const next = () => setActive((cur) => (cur + 1) % gallery.length);
+  const prev = () => setActive((cur) => (cur - 1 + gallery.length) % gallery.length);
+  const onTouchStart = (e) => setTouchStartX(e.changedTouches?.[0]?.clientX ?? null);
+  const onTouchEnd = (e) => {
+    if (touchStartX == null) return;
+    const endX = e.changedTouches?.[0]?.clientX ?? touchStartX;
+    const delta = endX - touchStartX;
+    if (Math.abs(delta) > 32) {
+      if (delta < 0) next();
+      else prev();
+    }
+    setTouchStartX(null);
+  };
   const pretty = (v) => String(v || '').replaceAll('-', ' ').replace(/\b\w/g, (m) => m.toUpperCase());
   return (
     <div className="admin-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div>
+        <div className="product-gallery" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
           <SafeImg src={gallery[active] || ''} alt={product.name} eager />
           {gallery.length > 1 ? (
-            <div className="hero-actions">
-              {gallery.map((img, i) => <button key={`${product.id}-img-${i}`} className={i === active ? 'btn' : 'btn ghost'} onClick={() => setActive(i)}>{i + 1}</button>)}
+            <div className="gallery-dots" aria-label="Galerie photos">
+              {gallery.map((img, i) => <span key={`${product.id}-img-${i}`} className={`dot ${i === active ? 'active' : ''}`} />)}
             </div>
           ) : null}
         </div>

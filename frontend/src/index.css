@@ -493,6 +493,28 @@ button {
   object-fit: cover;
 }
 
+.product-gallery {
+  touch-action: pan-y;
+}
+
+.gallery-dots {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4a4a4a;
+}
+
+.dot.active {
+  background: #ff2b1d;
+}
+
 .drawer {
   position: fixed;
   right: -440px;
