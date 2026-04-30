@@ -674,3 +674,64 @@ select:focus {
   color: #ff8d86;
   font-size: .9rem;
 }
+
+/* Compact block + marquee */
+.compact-section {
+  padding-top: 26px;
+  padding-bottom: 26px;
+}
+
+.mini-highlight {
+  border: 1px solid var(--line);
+  background: linear-gradient(90deg, rgba(255,43,29,.08), rgba(255,43,29,0));
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+.mini-highlight h2 {
+  margin: 4px 0 6px;
+  font-size: clamp(1.2rem, 4.6vw, 1.9rem);
+}
+
+.mini-highlight p {
+  margin: 0;
+  color: #d3d3d3;
+}
+
+.marquee {
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background: #0d0d0d;
+}
+
+.marquee-track {
+  display: flex;
+  gap: 12px;
+  white-space: nowrap;
+  padding: 10px 0;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: #f3f3f3;
+  animation: marqueeMove 22s linear infinite;
+}
+
+.marquee-track span { padding: 0 2px; }
+
+@keyframes marqueeMove {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Tighten global spacing */
+.section {
+  padding-top: 34px;
+  padding-bottom: 34px;
+}
+
+.shop-head {
+  margin-bottom: 10px;
+}
+
+.cards-3 {
+  gap: 10px;
+}

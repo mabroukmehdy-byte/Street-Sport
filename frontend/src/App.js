@@ -46,37 +46,6 @@ const defaultData = {
   products: seedProducts,
 };
 
-function buildCategoryTree(products) {
-  return {
-    homme: {
-      title: 'Homme',
-      children: {
-        'Sneakers Homme': (p) => p.gender === 'homme' && p.category === 'sneakers',
-        'Survêtements & Hoodies': (p) => p.gender === 'homme' && p.category === 'vetements' && (p.name.toLowerCase().includes('hoodie') || p.name.toLowerCase().includes('sweat')),
-        Pantalons: (p) => p.gender === 'homme' && p.category === 'vetements' && p.name.toLowerCase().includes('pantalon'),
-        Casquettes: (p) => (p.gender === 'homme' || p.gender === 'unisex') && p.category === 'accessoires' && p.name.toLowerCase().includes('casquette'),
-      },
-    },
-    femme: {
-      title: 'Femme',
-      children: {
-        'Sneakers Femme': (p) => p.gender === 'femme' && p.category === 'sneakers',
-        Leggings: (p) => p.gender === 'femme' && p.category === 'vetements' && p.name.toLowerCase().includes('legging'),
-        Vestes: (p) => p.gender === 'femme' && p.category === 'vetements' && p.name.toLowerCase().includes('veste'),
-        'Tops & Tees': (p) => p.gender === 'femme' && p.category === 'vetements' && p.name.toLowerCase().includes('tee'),
-      },
-    },
-    sneakers: {
-      title: 'Sneakers',
-      children: {
-        Running: (p) => p.category === 'sneakers' && p.sport === 'running',
-        Basket: (p) => p.category === 'sneakers' && p.sport === 'basket',
-        Lifestyle: (p) => p.category === 'sneakers' && p.sport === 'lifestyle',
-      },
-    },
-  };
-}
-
 function useData() {
   const [data, setData] = useState(defaultData);
   useEffect(() => {
@@ -143,52 +112,30 @@ function Header({ data, cartCount, onOpenCart }) {
   );
 }
 
-function CategoryExplorer({ data, onOpen, onQuickAdd }) {
-  const tree = useMemo(() => buildCategoryTree(data.products), [data.products]);
-  const [level1, setLevel1] = useState('homme');
-  const level2Keys = Object.keys(tree[level1].children);
-  const [level2, setLevel2] = useState(level2Keys[0]);
-
-  useEffect(() => {
-    const k = Object.keys(tree[level1].children);
-    setLevel2(k[0]);
-  }, [level1, tree]);
-
-  const selectLevel1 = (id) => {
-    setLevel1(id);
-    setTimeout(() => {
-      const panel = document.getElementById('explorer-submenu');
-      if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 30);
-  };
-
-  const products = data.products.filter(tree[level1].children[level2]);
-
+function CategoryExplorer({ data }) {
   return (
-    <section id="nouveautes" className="section reveal">
-      <h2>Acheter par catégorie</h2>
-      <div className="explorer-layout">
-        <div className="explorer-level level-1">
-          {data.categories.map((c) => (
-            <button key={c.id} className={level1 === c.id ? 'active' : ''} onClick={() => selectLevel1(c.id)}>
-              <img src={c.image} alt={c.name} />
-              <span>{c.name}</span>
-            </button>
-          ))}
-        </div>
+    <section id="nouveautes" className="section reveal compact-section">
+      <div className="mini-highlight">
+        <p className="eyebrow">Sélection rapide</p>
+        <h2>Nouveautés de la semaine</h2>
+        <p>Sneakers, vêtements et accessoires prêts à expédier.</p>
+      </div>
 
-        <div className="explorer-level level-2" id="explorer-submenu">
-          <h3>{tree[level1].title}</h3>
-          {level2Keys.map((k) => (
-            <button key={k} className={level2 === k ? 'active' : ''} onClick={() => setLevel2(k)}>{k}</button>
-          ))}
-        </div>
-
-        <div className="explorer-level level-3" id="explorer-products">
-          <h3>{level2}</h3>
-          {products.length === 0 ? <p>Aucun article dans cette sous-catégorie.</p> : (
-            <div className="cards-3">{products.map((p) => <ProductCard key={p.id} p={p} onOpen={onOpen} onQuickAdd={onQuickAdd} />)}</div>
-          )}
+      <div className="marquee" aria-label="Banderole nouveautés">
+        <div className="marquee-track">
+          <span>NOUVEAUTÉS</span>
+          <span>•</span>
+          <span>LIVRAISON 24/48H</span>
+          <span>•</span>
+          <span>RETOURS 30 JOURS</span>
+          <span>•</span>
+          <span>DROP STREET SPORT</span>
+          <span>•</span>
+          <span>NOUVEAUTÉS</span>
+          <span>•</span>
+          <span>LIVRAISON 24/48H</span>
+          <span>•</span>
+          <span>RETOURS 30 JOURS</span>
         </div>
       </div>
     </section>
@@ -446,7 +393,7 @@ export default function App() {
   return (
     <main id="home">
       <Header data={data} cartCount={cartCount} onOpenCart={() => setCartOpen(true)} />
-      <CategoryExplorer data={data} onOpen={openProduct} onQuickAdd={addToCart} />
+      <CategoryExplorer data={data} />
       <Catalog products={data.products} onOpen={openProduct} onQuickAdd={addToCart} />
       <SmartRecommendations viewed={viewed} all={data.products} onOpen={openProduct} onQuickAdd={addToCart} />
       <Footer data={data} />
