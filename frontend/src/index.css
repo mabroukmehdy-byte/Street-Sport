@@ -955,9 +955,9 @@ body.is-desktop .product-card:hover {
 .logo-highlight {
   display: grid;
   place-items: center;
-  min-height: 172px;
+  min-height: 176px;
   background: #fff;
-  padding: 1px;
+  padding: 0;
 }
 
 .logo-highlight img {
@@ -991,7 +991,7 @@ body.is-desktop .product-card:hover {
   text-align: center;
   width: 100%;
   border: 3px solid #fff;
-  padding: 14px 6px;
+  padding: 16px 4px;
   background: rgba(0,0,0,.06);
 }
 
