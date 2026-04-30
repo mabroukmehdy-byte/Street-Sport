@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Street-Sport/static/css/main.5e8962b4.css",
-    "main.js": "/Street-Sport/static/js/main.345de038.js",
+    "main.js": "/Street-Sport/static/js/main.041e21d1.js",
     "static/js/453.336ba5a8.chunk.js": "/Street-Sport/static/js/453.336ba5a8.chunk.js",
     "static/media/anton-latin-ext-400-normal.woff2": "/Street-Sport/static/media/anton-latin-ext-400-normal.6e1938b75b8a63a00ed5.woff2",
     "static/media/anton-latin-ext-400-normal.woff": "/Street-Sport/static/media/anton-latin-ext-400-normal.80d68c162e6242ad158f.woff",
@@ -35,11 +35,11 @@
     "static/media/manrope-cyrillic-ext-700-normal.woff2": "/Street-Sport/static/media/manrope-cyrillic-ext-700-normal.4ee2708831b279ef20f1.woff2",
     "index.html": "/Street-Sport/index.html",
     "main.5e8962b4.css.map": "/Street-Sport/static/css/main.5e8962b4.css.map",
-    "main.345de038.js.map": "/Street-Sport/static/js/main.345de038.js.map",
+    "main.041e21d1.js.map": "/Street-Sport/static/js/main.041e21d1.js.map",
     "453.336ba5a8.chunk.js.map": "/Street-Sport/static/js/453.336ba5a8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.5e8962b4.css",
-    "static/js/main.345de038.js"
+    "static/js/main.041e21d1.js"
   ]
 }
