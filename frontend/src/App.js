@@ -121,6 +121,14 @@ function CategoryExplorer({ data }) {
         <p>Sneakers, vêtements et accessoires prêts à expédier.</p>
       </div>
 
+      <div className="photo-marquee" aria-label="Banderole photos produits">
+        <div className="photo-track">
+          {data.products.slice(0, 8).concat(data.products.slice(0, 8)).map((p, i) => (
+            <img key={`${p.id}-${i}`} src={p.image} alt={p.name} />
+          ))}
+        </div>
+      </div>
+
       <div className="marquee" aria-label="Banderole nouveautés">
         <div className="marquee-track">
           <span>NOUVEAUTÉS</span>

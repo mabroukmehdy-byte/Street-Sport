@@ -735,3 +735,31 @@ select:focus {
 .cards-3 {
   gap: 10px;
 }
+
+.photo-marquee {
+  border: 1px solid var(--line);
+  background: #0a0a0a;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.photo-track {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  width: max-content;
+  animation: photoMarquee 24s linear infinite;
+}
+
+.photo-track img {
+  width: 128px;
+  height: 92px;
+  object-fit: cover;
+  border: 1px solid #2b2b2b;
+  flex: 0 0 auto;
+}
+
+@keyframes photoMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
