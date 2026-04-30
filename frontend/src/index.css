@@ -782,7 +782,7 @@ select:focus {
 .mini-highlight {
   border: 1px solid var(--line);
   background: linear-gradient(90deg, rgba(255,43,29,.08), rgba(255,43,29,0));
-  padding: 14px;
+  padding: 0;
   margin-bottom: 10px;
 }
 
@@ -961,7 +961,7 @@ body.is-desktop .product-card:hover {
 }
 
 .logo-highlight img {
-  width: min(320px, 88%);
+  width: 100%;
   height: auto;
   object-fit: contain;
 }
@@ -991,7 +991,7 @@ body.is-desktop .product-card:hover {
   text-align: center;
   width: 100%;
   border: 3px solid #fff;
-  padding: 16px 4px;
+  padding: 18px 2px;
   background: rgba(0,0,0,.06);
 }
 
