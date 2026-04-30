@@ -151,6 +151,14 @@ function CategoryExplorer({ data, onOpen, onQuickAdd }) {
     setLevel2(k[0]);
   }, [level1, tree]);
 
+  const selectLevel1 = (id) => {
+    setLevel1(id);
+    setTimeout(() => {
+      const panel = document.getElementById('explorer-submenu');
+      if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 30);
+  };
+
   const products = data.products.filter(tree[level1].children[level2]);
 
   return (
@@ -159,21 +167,21 @@ function CategoryExplorer({ data, onOpen, onQuickAdd }) {
       <div className="explorer-layout">
         <div className="explorer-level level-1">
           {data.categories.map((c) => (
-            <button key={c.id} className={level1 === c.id ? 'active' : ''} onClick={() => setLevel1(c.id)}>
+            <button key={c.id} className={level1 === c.id ? 'active' : ''} onClick={() => selectLevel1(c.id)}>
               <img src={c.image} alt={c.name} />
               <span>{c.name}</span>
             </button>
           ))}
         </div>
 
-        <div className="explorer-level level-2">
+        <div className="explorer-level level-2" id="explorer-submenu">
           <h3>{tree[level1].title}</h3>
           {level2Keys.map((k) => (
             <button key={k} className={level2 === k ? 'active' : ''} onClick={() => setLevel2(k)}>{k}</button>
           ))}
         </div>
 
-        <div className="explorer-level level-3">
+        <div className="explorer-level level-3" id="explorer-products">
           <h3>{level2}</h3>
           {products.length === 0 ? <p>Aucun article dans cette sous-catégorie.</p> : (
             <div className="cards-3">{products.map((p) => <ProductCard key={p.id} p={p} onOpen={onOpen} onQuickAdd={onQuickAdd} />)}</div>
