@@ -508,6 +508,9 @@ function BackOffice({ open, onClose, data, setData }) {
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newCategoryImage, setNewCategoryImage] = useState('');
   const [productCategoryFilter, setProductCategoryFilter] = useState('all');
+  const [savedProductId, setSavedProductId] = useState('');
+  const [savedHeroId, setSavedHeroId] = useState('');
+  const [savedCategoryId, setSavedCategoryId] = useState('');
   const slugify = (v) => String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const productCategoryOptions = useMemo(() => {
     return [
@@ -574,6 +577,11 @@ function BackOffice({ open, onClose, data, setData }) {
                     return { ...prev, heroSlides, hero: heroSlides[0] || prev.hero };
                   });
                 }} /></label>
+                <button onClick={() => {
+                  setData((prev) => ({ ...prev }));
+                  setSavedHeroId(h.id || String(i));
+                  setTimeout(() => setSavedHeroId((cur) => (cur === (h.id || String(i)) ? '' : cur)), 1200);
+                }}>{savedHeroId === (h.id || String(i)) ? 'Enregistré' : 'Enregistrer'}</button>
                 <button onClick={() => setData((prev) => {
                   const heroSlides = (prev.heroSlides || []).filter((_, idx) => idx !== i);
                   if (!heroSlides.length) heroSlides.push({ id: `h${Date.now()}`, title: 'Nouveau hero', subtitle: 'Sous-titre', image: prev.hero?.image || '' });
@@ -620,6 +628,11 @@ function BackOffice({ open, onClose, data, setData }) {
                   const url = await fileToDataUrl(f); updatePath(setData, ['categories', i, 'image'], url);
                 }} /></label>
                 <small>ID: {c.id}</small>
+                <button onClick={() => {
+                  setData((prev) => ({ ...prev }));
+                  setSavedCategoryId(c.id);
+                  setTimeout(() => setSavedCategoryId((cur) => (cur === c.id ? '' : cur)), 1200);
+                }}>{savedCategoryId === c.id ? 'Enregistré' : 'Enregistrer'}</button>
                 <button onClick={() => setData((prev) => {
                   const fallback = prev.categories.find((x) => x.id !== c.id)?.id || 'sneakers';
                   return {
@@ -675,6 +688,11 @@ function BackOffice({ open, onClose, data, setData }) {
                   const f = e.target.files?.[0]; if (!f) return;
                   const url = await fileToDataUrl(f); updatePath(setData, ['products', i, 'image'], url);
                 }} /></label>
+                <button onClick={() => {
+                  setData((prev) => ({ ...prev }));
+                  setSavedProductId(p.id);
+                  setTimeout(() => setSavedProductId((cur) => (cur === p.id ? '' : cur)), 1200);
+                }}>{savedProductId === p.id ? 'Enregistré' : 'Enregistrer'}</button>
                 <button onClick={() => setData((prev) => ({ ...prev, products: prev.products.filter((x) => x.id !== p.id) }))}>Supprimer</button>
               </div>
               );
