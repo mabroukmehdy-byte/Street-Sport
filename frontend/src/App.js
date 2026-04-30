@@ -39,6 +39,14 @@ const seedProducts = [
 
 const defaultData = {
   brand: { name: 'Street Sport', tagline: 'Sport urbain et streetwear', address: '30 Bd Ornano, 75018 Paris' },
+  content: {
+    topline: 'Livraison offerte dès 100 EUR • DERNIÈRES COLLECTIONS',
+    siteTitle: 'Street Sport Paris',
+    logoMain: 'STREETSPORT',
+    logoSub: 'PARIS',
+    catalogTitle: 'Tous les articles',
+    marquee: ['NOUVEAUTÉS', 'LIVRAISON 24/48H', 'RETOURS 30 JOURS', 'DROP STREET SPORT'],
+  },
   hero: {
     title: 'Nouveautés performance & street',
     subtitle: 'Des drops sneakers, vêtements et accessoires. Livraison rapide en France.',
@@ -212,11 +220,11 @@ function useDeviceClass() {
 function Header({ data, cartCount, onOpenCart }) {
   return (
     <header className="topbar">
-      <div className="topline">Livraison offerte dès 100 EUR • DERNIÈRES COLLECTIONS</div>
+      <div className="topline">{data.content?.topline || 'Livraison offerte dès 100 EUR • DERNIÈRES COLLECTIONS'}</div>
       <BrandStrip />
       <div className="navline">
         <div className="brand-block">
-          <p className="brand">Street Sport Paris</p>
+          <p className="brand">{data.content?.siteTitle || 'Street Sport Paris'}</p>
         </div>
         <input className="search" id="search" placeholder="Rechercher chaussures, vêtements, accessoires" />
         <button className="cart-chip" onClick={onOpenCart}>Panier ({cartCount})</button>
@@ -226,14 +234,26 @@ function Header({ data, cartCount, onOpenCart }) {
 }
 
 function CategoryExplorer({ data }) {
+  const logoMain = data.content?.logoMain || 'STREETSPORT';
+  const logoSub = data.content?.logoSub || 'PARIS';
+  const mainLeft = logoMain.includes('O') ? logoMain.split('O')[0] : logoMain;
+  const mainRight = logoMain.includes('O') ? logoMain.split('O').slice(1).join('O') : '';
+  const marqueeItems = (data.content?.marquee && data.content.marquee.length ? data.content.marquee : ['NOUVEAUTÉS', 'LIVRAISON 24/48H', 'RETOURS 30 JOURS', 'DROP STREET SPORT']);
+  const marqueeSequence = [...marqueeItems, ...marqueeItems];
   return (
     <section id="nouveautes" className="section reveal compact-section">
       <div className="mini-highlight logo-highlight" aria-label="Logo Street Sport Paris 18">
         <div className="ss-logo-box">
           <div className="ss-logo-line">
-            <span>STREETSP</span><span className="o-red">O</span><span>RT</span>
+            {logoMain.includes('O') ? (
+              <>
+                <span>{mainLeft}</span><span className="o-red">O</span><span>{mainRight}</span>
+              </>
+            ) : (
+              <span>{logoMain}</span>
+            )}
           </div>
-          <div className="ss-logo-sub">PARIS</div>
+          <div className="ss-logo-sub">{logoSub}</div>
         </div>
       </div>
 
@@ -247,19 +267,12 @@ function CategoryExplorer({ data }) {
 
       <div className="marquee" aria-label="Banderole nouveautés">
         <div className="marquee-track">
-          <span>NOUVEAUTÉS</span>
-          <span>•</span>
-          <span>LIVRAISON 24/48H</span>
-          <span>•</span>
-          <span>RETOURS 30 JOURS</span>
-          <span>•</span>
-          <span>DROP STREET SPORT</span>
-          <span>•</span>
-          <span>NOUVEAUTÉS</span>
-          <span>•</span>
-          <span>LIVRAISON 24/48H</span>
-          <span>•</span>
-          <span>RETOURS 30 JOURS</span>
+          {marqueeSequence.map((item, idx) => (
+            <React.Fragment key={`${item}-${idx}`}>
+              <span>{item}</span>
+              {idx < marqueeSequence.length - 1 ? <span>•</span> : null}
+            </React.Fragment>
+          ))}
         </div>
       </div>
     </section>
@@ -304,7 +317,7 @@ function SmartRecommendations({ viewed, all, onOpen, onQuickAdd }) {
   );
 }
 
-function Catalog({ products, onOpen, onQuickAdd }) {
+function Catalog({ data, products, onOpen, onQuickAdd }) {
   const [q, setQ] = useState('');
   const [category, setCategory] = useState('all');
 
@@ -347,7 +360,7 @@ function Catalog({ products, onOpen, onQuickAdd }) {
   return (
     <section id="catalogue" className="section reveal">
       <div className="shop-head reveal">
-        <h2>Tous les articles</h2>
+        <h2>{data.content?.catalogTitle || 'Tous les articles'}</h2>
         <div className="shop-controls">
           <select value={category} onChange={(e) => setCategory(e.target.value)}>
             <option value="all">Catégorie</option>
@@ -660,6 +673,24 @@ function BackOffice({ open, onClose, data, setData, saveError }) {
               const heroSlides = [...(prev.heroSlides || []), { id: `h${Date.now()}`, title: 'Nouveau hero', subtitle: 'Sous-titre', image: prev.hero?.image || '' }];
               return { ...prev, heroSlides, hero: heroSlides[0] || prev.hero };
             })}>Ajouter un hero</button>
+
+            <div className="admin-card">
+              <h4>Contenu global (hors Produits/Catégories)</h4>
+              <input value={data.content?.topline || ''} onChange={(e) => updatePath(setData, ['content', 'topline'], e.target.value)} placeholder="Bandeau haut" />
+              <input value={data.content?.siteTitle || ''} onChange={(e) => updatePath(setData, ['content', 'siteTitle'], e.target.value)} placeholder="Titre site" />
+              <input value={data.content?.logoMain || ''} onChange={(e) => updatePath(setData, ['content', 'logoMain'], e.target.value)} placeholder="Texte logo principal" />
+              <input value={data.content?.logoSub || ''} onChange={(e) => updatePath(setData, ['content', 'logoSub'], e.target.value)} placeholder="Texte logo secondaire" />
+              <input value={data.content?.catalogTitle || ''} onChange={(e) => updatePath(setData, ['content', 'catalogTitle'], e.target.value)} placeholder="Titre section catalogue" />
+              <textarea rows={3} value={(data.content?.marquee || []).join('\n')} onChange={(e) => updatePath(setData, ['content', 'marquee'], e.target.value.split('\n').map((x) => x.trim()).filter(Boolean))} placeholder="Banderole (une ligne par élément)" />
+              <input value={data.brand?.name || ''} onChange={(e) => updatePath(setData, ['brand', 'name'], e.target.value)} placeholder="Nom marque/footer" />
+              <input value={data.brand?.tagline || ''} onChange={(e) => updatePath(setData, ['brand', 'tagline'], e.target.value)} placeholder="Slogan/footer" />
+              <input value={data.brand?.address || ''} onChange={(e) => updatePath(setData, ['brand', 'address'], e.target.value)} placeholder="Adresse/footer" />
+              <button onClick={() => {
+                setData((prev) => ({ ...prev }));
+                setSavedHeroId('content');
+                setTimeout(() => setSavedHeroId((cur) => (cur === 'content' ? '' : cur)), 1200);
+              }}>{savedHeroId === 'content' ? 'Enregistré' : 'Enregistrer'}</button>
+            </div>
           </section>
         )}
 
@@ -876,7 +907,7 @@ export default function App() {
     <main id="home">
       <Header data={data} cartCount={cartCount} onOpenCart={() => setCartOpen(true)} />
       <CategoryExplorer data={data} />
-      <Catalog products={data.products} onOpen={openProduct} onQuickAdd={addToCart} />
+      <Catalog data={data} products={data.products} onOpen={openProduct} onQuickAdd={addToCart} />
       <SmartRecommendations viewed={viewed} all={data.products} onOpen={openProduct} onQuickAdd={addToCart} />
       <Footer data={data} />
 
