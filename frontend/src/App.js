@@ -93,10 +93,35 @@ function useReveal() {
   }, []);
 }
 
+
+function BrandStrip() {
+  const brands = [
+    'NIKE',
+    'MIZUNO',
+    'ASICS',
+    'UNDER ARMOUR',
+    'RALPH LAUREN',
+    'NIKE ACG',
+    'SCOTT',
+    'HELLY HANSEN',
+  ];
+  const doubled = brands.concat(brands);
+  return (
+    <div className="brand-strip" aria-label="Marques disponibles">
+      <div className="brand-track">
+        {doubled.map((b, i) => (
+          <span key={`${b}-${i}`}>{b}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Header({ data, cartCount, onOpenCart }) {
   return (
     <header className="topbar">
       <div className="topline">Livraison offerte dès 100 EUR • DERNIÈRES COLLECTIONS</div>
+      <BrandStrip />
       <div className="navline">
         <p className="brand">{data.brand.name}</p>
         <div className="quick-links">
@@ -121,10 +146,30 @@ function CategoryExplorer({ data }) {
         <p>Sneakers, vêtements et accessoires prêts à expédier.</p>
       </div>
 
-      <div className="photo-marquee" aria-label="Banderole photos produits">
-        <div className="photo-track">
-          {data.products.slice(0, 8).concat(data.products.slice(0, 8)).map((p, i) => (
-            <img key={`${p.id}-${i}`} src={p.image} alt={p.name} />
+      <div className="photo-marquee" aria-label="Banderole logos marques">
+        <div className="photo-track logo-track">
+          {[
+            { name: 'Nike', src: 'https://logo.clearbit.com/nike.com' },
+            { name: 'Mizuno', src: 'https://logo.clearbit.com/mizuno.com' },
+            { name: 'Asics', src: 'https://logo.clearbit.com/asics.com' },
+            { name: 'Under Armour', src: 'https://logo.clearbit.com/underarmour.com' },
+            { name: 'Ralph Lauren', src: 'https://logo.clearbit.com/ralphlauren.com' },
+            { name: 'Nike ACG', src: 'https://logo.clearbit.com/nike.com' },
+            { name: 'Scott', src: 'https://logo.clearbit.com/scott-sports.com' },
+            { name: 'Helly Hansen', src: 'https://logo.clearbit.com/hellyhansen.com' },
+          ].concat([
+            { name: 'Nike', src: 'https://logo.clearbit.com/nike.com' },
+            { name: 'Mizuno', src: 'https://logo.clearbit.com/mizuno.com' },
+            { name: 'Asics', src: 'https://logo.clearbit.com/asics.com' },
+            { name: 'Under Armour', src: 'https://logo.clearbit.com/underarmour.com' },
+            { name: 'Ralph Lauren', src: 'https://logo.clearbit.com/ralphlauren.com' },
+            { name: 'Nike ACG', src: 'https://logo.clearbit.com/nike.com' },
+            { name: 'Scott', src: 'https://logo.clearbit.com/scott-sports.com' },
+            { name: 'Helly Hansen', src: 'https://logo.clearbit.com/hellyhansen.com' },
+          ]).map((b, i) => (
+            <div key={`${b.name}-${i}`} className="logo-tile">
+              <img src={b.src} alt={b.name} />
+            </div>
           ))}
         </div>
       </div>
