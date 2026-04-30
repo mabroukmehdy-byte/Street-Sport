@@ -107,17 +107,6 @@ function updatePath(setData, path, value) {
   });
 }
 
-function MegaMenu({ nav }) {
-  const entries = Object.entries(nav);
-  return (
-    <div className="mega-wrap">
-      {entries.map(([k, vals]) => (
-        <div key={k} className="mega-col"><h4>{k}</h4>{vals.map((v) => <a key={v} href="#catalogue">{v}</a>)}</div>
-      ))}
-    </div>
-  );
-}
-
 function Header({ data, cartCount, onOpenCart }) {
   return (
     <header className="topbar">
@@ -127,21 +116,7 @@ function Header({ data, cartCount, onOpenCart }) {
         <input className="search" id="search" placeholder="Rechercher chaussures, vêtements, accessoires" />
         <button className="cart-chip" onClick={onOpenCart}>Panier ({cartCount})</button>
       </div>
-      <MegaMenu nav={data.nav} />
     </header>
-  );
-}
-
-function Hero({ data }) {
-  return (
-    <section className="hero" style={{ backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.70), rgba(0,0,0,.25)), url(${data.hero.image})` }}>
-      <div className="hero-inner">
-        <p className="eyebrow">NOUVEAUTÉS</p>
-        <h1>{data.hero.title}</h1>
-        <p>{data.hero.subtitle}</p>
-        <div className="hero-actions"><a href="#catalogue" className="btn primary">Acheter</a><a href="#nouveautes" className="btn ghost">Explorer</a></div>
-      </div>
-    </section>
   );
 }
 
@@ -401,7 +376,6 @@ export default function App() {
   return (
     <main>
       <Header data={data} cartCount={cartCount} onOpenCart={() => setCartOpen(true)} />
-      <Hero data={data} />
       <CategoryExplorer data={data} onOpen={openProduct} onQuickAdd={addToCart} />
       <Catalog products={data.products} onOpen={openProduct} onQuickAdd={addToCart} />
       <SmartRecommendations viewed={viewed} all={data.products} onOpen={openProduct} onQuickAdd={addToCart} />
