@@ -384,7 +384,7 @@ function CartDrawer({ open, onClose, cart, setCart }) {
 
   return (
     <aside className={`drawer ${open ? 'show' : ''}`}>
-      <div className="drawer-head"><h3>Panier</h3><button onClick={() => { onClose(); clearCheckout(); }}>Fermer</button></div>
+      <div className="drawer-head"><h3>Panier</h3><button onClick={() => { onClose(); clearCheckout(); }}>Continuer mes achats</button></div>
 
       {step === 'cart' && (
         <>
