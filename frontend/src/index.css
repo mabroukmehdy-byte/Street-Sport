@@ -698,6 +698,10 @@ select:focus {
   font-size: .9rem;
 }
 
+.error {
+  color: #ff8d86;
+}
+
 /* Compact block + marquee */
 .compact-section {
   padding-top: 26px;

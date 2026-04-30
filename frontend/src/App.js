@@ -69,6 +69,7 @@ const defaultData = {
 
 function useData() {
   const [data, setData] = useState(defaultData);
+  const [saveError, setSaveError] = useState('');
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -83,17 +84,43 @@ function useData() {
     } catch (_) {}
   }, []);
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      setSaveError('');
+    } catch (_) {
+      setSaveError("Stockage saturé: réduis le nombre/taille des images.");
+    }
   }, [data]);
-  return [data, setData];
+  return [data, setData, saveError];
 }
 
 function fileToDataUrl(file) {
   return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve(String(r.result));
-    r.onerror = reject;
-    r.readAsDataURL(file);
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const maxW = 1400;
+        const ratio = Math.min(1, maxW / img.width);
+        const w = Math.max(1, Math.round(img.width * ratio));
+        const h = Math.max(1, Math.round(img.height * ratio));
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(String(reader.result));
+          return;
+        }
+        ctx.drawImage(img, 0, 0, w, h);
+        // WebP compressé pour limiter le poids dans localStorage
+        resolve(canvas.toDataURL('image/webp', 0.76));
+      };
+      img.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
   });
 }
 
@@ -519,7 +546,7 @@ function AdminLogin({ onSuccess, onClose }) {
   );
 }
 
-function BackOffice({ open, onClose, data, setData }) {
+function BackOffice({ open, onClose, data, setData, saveError }) {
   const [tab, setTab] = useState('produits');
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newCategoryImage, setNewCategoryImage] = useState('');
@@ -563,6 +590,7 @@ function BackOffice({ open, onClose, data, setData }) {
     <div className="admin-overlay" onClick={onClose}>
       <div className="admin" onClick={(e) => e.stopPropagation()}>
         <div className="admin-head"><h3>Back Office Catalogue</h3><div className="hero-actions"><button onClick={() => { localStorage.removeItem(ADMIN_SESSION_KEY); onClose(); }}>Déconnexion</button><button onClick={onClose}>Fermer</button></div></div>
+        {saveError ? <div className="admin-actions"><small className="error">{saveError}</small></div> : null}
         <div className="admin-tabs">{['hero', 'categories', 'produits'].map((t) => <button key={t} className={tab === t ? 'active' : ''} onClick={() => setTab(t)}>{t}</button>)}</div>
 
         {tab === 'hero' && (
@@ -708,11 +736,11 @@ function BackOffice({ open, onClose, data, setData }) {
                 <label>Importer image(s)<input type="file" accept="image/*" multiple onChange={async (e) => {
                   const files = Array.from(e.target.files || []);
                   if (!files.length) return;
-                  const urls = await Promise.all(files.map((f) => fileToDataUrl(f)));
+                  const urls = await Promise.all(files.slice(0, 6).map((f) => fileToDataUrl(f)));
                   setData((prev) => {
                     const products = [...prev.products];
                     const existing = products[i]?.images || (products[i]?.image ? [products[i].image] : []);
-                    const merged = [...existing, ...urls].filter(Boolean);
+                    const merged = [...existing, ...urls].filter(Boolean).slice(0, 8);
                     products[i] = { ...products[i], images: merged, image: merged[0] || products[i].image };
                     return { ...prev, products };
                   });
@@ -759,7 +787,7 @@ function Footer({ data }) {
 export default function App() {
   useReveal();
   useDeviceClass();
-  const [data, setData] = useData();
+  const [data, setData, saveError] = useData();
   const [selected, setSelected] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [cart, setCart] = useState([]);
@@ -814,7 +842,7 @@ export default function App() {
 
       <ProductModal product={selected} onClose={() => setSelected(null)} onAdd={addToCart} />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} setCart={setCart} />
-      <BackOffice open={adminOpen} onClose={() => setAdminOpen(false)} data={data} setData={setData} />
+      <BackOffice open={adminOpen} onClose={() => setAdminOpen(false)} data={data} setData={setData} saveError={saveError} />
       {loginOpen ? <AdminLogin onSuccess={() => { setAdminAuth(true); setLoginOpen(false); setAdminOpen(true); }} onClose={() => setLoginOpen(false)} /> : null}
     </main>
   );
