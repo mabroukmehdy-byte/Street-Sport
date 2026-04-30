@@ -20,6 +20,7 @@ const BRANDS = [
 const ADMIN_SESSION_KEY = 'streetsport_admin_session_v1';
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'StreetSport2026!';
+const FALLBACK_IMG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><rect width='100%' height='100%' fill='%23121212'/><text x='50%' y='50%' fill='%23d9d9d9' font-family='Arial, sans-serif' font-size='36' text-anchor='middle' dominant-baseline='middle'>Image indisponible</text></svg>";
 
 const seedProducts = [
   { id: 'p1', name: 'Velocity Air One', brand: 'Street Sport', price: 129, oldPrice: 149, category: 'sneakers', gender: 'homme', sport: 'running', isNew: true, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80', sizes: ['40', '41', '42', '43', '44'], desc: 'Amorti réactif et empeigne respirante.' },
@@ -105,6 +106,20 @@ function useReveal() {
   }, []);
 }
 
+function SafeImg({ src, alt, className, eager = false }) {
+  const [failed, setFailed] = useState(false);
+  return (
+    <img
+      src={failed ? FALLBACK_IMG : src}
+      alt={alt}
+      className={className}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 
 function BrandStrip() {
   const doubled = BRANDS.concat(BRANDS);
@@ -173,7 +188,7 @@ function CategoryExplorer({ data }) {
         <div className="photo-track logo-track">
           {BRANDS.concat(BRANDS).map((b, i) => (
             <div key={`${b.name}-${i}`} className="logo-tile">
-              <img src={b.logo} alt={b.name} />
+              <SafeImg src={b.logo} alt={b.name} />
             </div>
           ))}
         </div>
@@ -204,7 +219,7 @@ function ProductCard({ p, onOpen, onQuickAdd }) {
   const discount = p.oldPrice ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100) : 0;
   return (
     <article className="product-card">
-      <button className="img-btn" onClick={() => onOpen(p)}><img src={p.image} alt={p.name} /></button>
+      <button className="img-btn" onClick={() => onOpen(p)}><SafeImg src={p.image} alt={p.name} eager /></button>
       <div>
         <small>{p.brand} • {p.gender}</small>
         <h3>{p.name}</h3>
@@ -285,7 +300,7 @@ function ProductModal({ product, onClose, onAdd }) {
   return (
     <div className="admin-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <img src={product.image} alt={product.name} />
+        <SafeImg src={product.image} alt={product.name} eager />
         <div>
           <small>{product.brand}</small>
           <h3>{product.name}</h3>
@@ -359,7 +374,7 @@ function CartDrawer({ open, onClose, cart, setCart }) {
           <div className="drawer-body">
             {cart.length === 0 ? <p>Ton panier est vide.</p> : cart.map((i) => (
               <div className="line" key={i.key}>
-                <img src={i.image} alt={i.name} />
+                <SafeImg src={i.image} alt={i.name} />
                 <div>
                   <strong>{i.name}</strong>
                   <p>{i.size} - {i.price} EUR</p>
