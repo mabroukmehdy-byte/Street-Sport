@@ -165,7 +165,7 @@ function CategoryExplorer({ data }) {
           <div className="ss-logo-line">
             <span>STREETSP</span><span className="o-red">O</span><span>RT</span>
           </div>
-          <div className="ss-logo-sub">PARIS</div>
+          <div className="ss-logo-sub">PARIS 18</div>
         </div>
       </div>
 

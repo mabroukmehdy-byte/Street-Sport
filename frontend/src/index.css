@@ -889,7 +889,7 @@ body.is-desktop .product-card:hover {
   font-family: Anton, sans-serif;
   color: #fff;
   letter-spacing: .04em;
-  font-size: clamp(1.6rem, 7vw, 3.6rem);
+  font-size: clamp(2rem, 9vw, 5rem);
   line-height: 1;
   display: flex;
   align-items: center;
@@ -908,7 +908,7 @@ body.is-desktop .product-card:hover {
   text-align: center;
   font-family: Anton, sans-serif;
   letter-spacing: .07em;
-  font-size: clamp(.9rem, 3vw, 1.7rem);
+  font-size: clamp(1.05rem, 3.8vw, 2.05rem);
 }
 
 .promo-row {
