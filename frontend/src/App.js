@@ -107,6 +107,20 @@ function updatePath(setData, path, value) {
   });
 }
 
+
+function useReveal() {
+  useEffect(() => {
+    const nodes = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('revealed');
+      });
+    }, { threshold: 0.16 });
+    nodes.forEach((n) => io.observe(n));
+    return () => io.disconnect();
+  }, []);
+}
+
 function Header({ data, cartCount, onOpenCart }) {
   return (
     <header className="topbar">
@@ -140,7 +154,7 @@ function CategoryExplorer({ data, onOpen, onQuickAdd }) {
   const products = data.products.filter(tree[level1].children[level2]);
 
   return (
-    <section id="nouveautes" className="section">
+    <section id="nouveautes" className="section reveal">
       <h2>Acheter par catégorie</h2>
       <div className="explorer-layout">
         <div className="explorer-level level-1">
@@ -192,7 +206,7 @@ function SmartRecommendations({ viewed, all, onOpen, onQuickAdd }) {
     return all.filter((x) => x.id !== last.id && (x.category === last.category || x.brand === last.brand || x.sport === last.sport)).slice(0, 6);
   }, [viewed, all]);
   return (
-    <section className="section"><h2>Recommandé pour toi</h2><div className="cards-3">{recos.map((p) => <ProductCard key={p.id} p={p} onOpen={onOpen} onQuickAdd={onQuickAdd} />)}</div></section>
+    <section className="section reveal"><h2>Recommandé pour toi</h2><div className="cards-3">{recos.map((p) => <ProductCard key={p.id} p={p} onOpen={onOpen} onQuickAdd={onQuickAdd} />)}</div></section>
   );
 }
 
@@ -233,8 +247,8 @@ function Catalog({ products, onOpen, onQuickAdd }) {
   }, [products, q, category, gender, sport, sort]);
 
   return (
-    <section id="catalogue" className="section">
-      <div className="shop-head">
+    <section id="catalogue" className="section reveal">
+      <div className="shop-head reveal">
         <h2>Tous les articles</h2>
         <div className="shop-controls">
           <select value={category} onChange={(e) => setCategory(e.target.value)}><option value="all">Catégorie</option><option value="sneakers">Sneakers</option><option value="vetements">Vêtements</option><option value="accessoires">Accessoires</option></select>
@@ -351,10 +365,11 @@ function BackOffice({ open, onClose, data, setData }) {
 }
 
 function Footer({ data }) {
-  return <footer className="footer"><p>{data.brand.name} • {data.brand.tagline}</p><p>{data.brand.address}</p></footer>;
+  return <footer className="footer reveal revealed"><p>{data.brand.name} • {data.brand.tagline}</p><p>{data.brand.address}</p></footer>;
 }
 
 export default function App() {
+  useReveal();
   const [data, setData] = useData();
   const [selected, setSelected] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
