@@ -5,6 +5,7 @@ import '@fontsource/manrope/700.css';
 import './index.css';
 
 const STORAGE_KEY = 'streetsport_nike_visual_bo_v1';
+const CART_KEY = 'streetsport_cart_v2';
 
 const BRANDS = [
   { name: 'NIKE', logo: 'https://logo.clearbit.com/nike.com' },
@@ -299,18 +300,138 @@ function ProductModal({ product, onClose, onAdd }) {
 }
 
 function CartDrawer({ open, onClose, cart, setCart }) {
+  const [step, setStep] = useState('cart');
+  const [promo, setPromo] = useState('');
+  const [promoOk, setPromoOk] = useState('');
+  const [shippingMode, setShippingMode] = useState('standard');
+  const [customer, setCustomer] = useState({ name: '', email: '', phone: '', address: '', city: '', zip: '' });
+  const [errors, setErrors] = useState({});
+  const [orderRef, setOrderRef] = useState('');
+
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const shipping = subtotal >= 100 || subtotal === 0 ? 0 : 6.9;
-  const total = subtotal + shipping;
+  const shippingBase = shippingMode === 'express' ? 9.9 : subtotal >= 100 || subtotal === 0 ? 0 : 6.9;
+  const discount = promoOk === 'SAVE10' ? subtotal * 0.1 : promoOk === 'SAVE20' ? subtotal * 0.2 : 0;
+  const total = Math.max(0, subtotal - discount + shippingBase);
+
+  const clearCheckout = () => {
+    setStep('cart');
+    setPromo('');
+    setPromoOk('');
+    setShippingMode('standard');
+    setCustomer({ name: '', email: '', phone: '', address: '', city: '', zip: '' });
+    setErrors({});
+  };
+
+  const applyPromo = () => {
+    const code = promo.trim().toUpperCase();
+    if (code === 'SAVE10' || code === 'SAVE20') {
+      setPromoOk(code);
+    } else {
+      setPromoOk('');
+    }
+  };
+
+  const validateCustomer = () => {
+    const e = {};
+    if (!customer.name.trim()) e.name = 'Nom requis';
+    if (!customer.email.includes('@')) e.email = 'Email invalide';
+    if (!customer.address.trim()) e.address = 'Adresse requise';
+    if (!customer.city.trim()) e.city = 'Ville requise';
+    if (!customer.zip.trim()) e.zip = 'Code postal requis';
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const confirmOrder = () => {
+    if (!validateCustomer()) return;
+    const ref = `SS-${Date.now().toString().slice(-8)}`;
+    setOrderRef(ref);
+    setStep('done');
+    setCart([]);
+  };
+
   return (
     <aside className={`drawer ${open ? 'show' : ''}`}>
-      <div className="drawer-head"><h3>Panier</h3><button onClick={onClose}>Fermer</button></div>
-      <div className="drawer-body">{cart.length === 0 ? <p>Ton panier est vide.</p> : cart.map((i) => <div className="line" key={i.key}><img src={i.image} alt={i.name} /><div><strong>{i.name}</strong><p>{i.size} - {i.price} EUR</p><div className="hero-actions"><button onClick={() => setCart((p) => p.map((x) => x.key === i.key ? { ...x, qty: Math.max(1, x.qty - 1) } : x))}>-</button><span>{i.qty}</span><button onClick={() => setCart((p) => p.map((x) => x.key === i.key ? { ...x, qty: x.qty + 1 } : x))}>+</button><button onClick={() => setCart((p) => p.filter((x) => x.key !== i.key))}>Suppr.</button></div></div></div>)}</div>
-      <div className="drawer-foot"><p>Sous-total: <strong>{subtotal.toFixed(2)} EUR</strong></p><p>Livraison: <strong>{shipping === 0 ? 'Offerte' : `${shipping.toFixed(2)} EUR`}</strong></p><p>Total: <strong>{total.toFixed(2)} EUR</strong></p><button>Payer</button></div>
+      <div className="drawer-head"><h3>Panier</h3><button onClick={() => { onClose(); clearCheckout(); }}>Fermer</button></div>
+
+      {step === 'cart' && (
+        <>
+          <div className="drawer-body">
+            {cart.length === 0 ? <p>Ton panier est vide.</p> : cart.map((i) => (
+              <div className="line" key={i.key}>
+                <img src={i.image} alt={i.name} />
+                <div>
+                  <strong>{i.name}</strong>
+                  <p>{i.size} - {i.price} EUR</p>
+                  <div className="hero-actions">
+                    <button onClick={() => setCart((p) => p.map((x) => x.key === i.key ? { ...x, qty: Math.max(1, x.qty - 1) } : x))}>-</button>
+                    <span>{i.qty}</span>
+                    <button onClick={() => setCart((p) => p.map((x) => x.key === i.key ? { ...x, qty: x.qty + 1 } : x))}>+</button>
+                    <button onClick={() => setCart((p) => p.filter((x) => x.key !== i.key))}>Suppr.</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="drawer-foot">
+            <div className="promo-row">
+              <input value={promo} onChange={(e) => setPromo(e.target.value)} placeholder="Code promo (SAVE10 / SAVE20)" />
+              <button onClick={applyPromo}>Appliquer</button>
+            </div>
+            {promo && <small>{promoOk ? `Code appliqué: ${promoOk}` : 'Code invalide'}</small>}
+            <p>Sous-total: <strong>{subtotal.toFixed(2)} EUR</strong></p>
+            {discount > 0 ? <p>Réduction: <strong>-{discount.toFixed(2)} EUR</strong></p> : null}
+            <div className="ship-mode">
+              <label><input type="radio" checked={shippingMode === 'standard'} onChange={() => setShippingMode('standard')} /> Standard</label>
+              <label><input type="radio" checked={shippingMode === 'express'} onChange={() => setShippingMode('express')} /> Express</label>
+            </div>
+            <p>Livraison: <strong>{shippingBase === 0 ? 'Offerte' : `${shippingBase.toFixed(2)} EUR`}</strong></p>
+            <p>Total: <strong>{total.toFixed(2)} EUR</strong></p>
+            <button disabled={!cart.length} onClick={() => setStep('checkout')}>Passer au paiement</button>
+          </div>
+        </>
+      )}
+
+      {step === 'checkout' && (
+        <div className="drawer-body checkout-form">
+          <h4>Informations de livraison</h4>
+          <input value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} placeholder="Nom complet" />
+          {errors.name ? <small className="error">{errors.name}</small> : null}
+          <input value={customer.email} onChange={(e) => setCustomer({ ...customer, email: e.target.value })} placeholder="Email" />
+          {errors.email ? <small className="error">{errors.email}</small> : null}
+          <input value={customer.phone} onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} placeholder="Téléphone" />
+          <input value={customer.address} onChange={(e) => setCustomer({ ...customer, address: e.target.value })} placeholder="Adresse" />
+          {errors.address ? <small className="error">{errors.address}</small> : null}
+          <div className="split">
+            <div>
+              <input value={customer.city} onChange={(e) => setCustomer({ ...customer, city: e.target.value })} placeholder="Ville" />
+              {errors.city ? <small className="error">{errors.city}</small> : null}
+            </div>
+            <div>
+              <input value={customer.zip} onChange={(e) => setCustomer({ ...customer, zip: e.target.value })} placeholder="Code postal" />
+              {errors.zip ? <small className="error">{errors.zip}</small> : null}
+            </div>
+          </div>
+          <p>Total à payer: <strong>{total.toFixed(2)} EUR</strong></p>
+          <div className="hero-actions">
+            <button onClick={confirmOrder}>Confirmer la commande</button>
+            <button className="btn ghost" onClick={() => setStep('cart')}>Retour panier</button>
+          </div>
+        </div>
+      )}
+
+      {step === 'done' && (
+        <div className="drawer-body checkout-form">
+          <h4>Commande confirmée</h4>
+          <p>Merci {customer.name}, ta commande est validée.</p>
+          <p>Référence: <strong>{orderRef}</strong></p>
+          <p>Un email de confirmation a été envoyé à {customer.email}.</p>
+          <button onClick={() => { clearCheckout(); onClose(); }}>Terminer</button>
+        </div>
+      )}
     </aside>
   );
 }
-
 
 function AdminLogin({ onSuccess, onClose }) {
   const [user, setUser] = useState('');
@@ -428,6 +549,17 @@ export default function App() {
   const [loginOpen, setLoginOpen] = useState(false);
 
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(CART_KEY);
+      if (raw) setCart(JSON.parse(raw));
+    } catch (_) {}
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  }, [cart]);
 
   useEffect(() => {
     if (localStorage.getItem(ADMIN_SESSION_KEY) === '1') setAdminAuth(true);
