@@ -1,3 +1,10 @@
+
+html, body, #root, main {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 :root {
   --bg: #060606;
   --surface: #101010;
@@ -879,6 +886,7 @@ body.is-desktop .product-card:hover {
 }
 
 .ss-logo-box {
+  text-align: center;
   width: 100%;
   border: 3px solid #fff;
   padding: 6px 8px;
@@ -893,6 +901,7 @@ body.is-desktop .product-card:hover {
   line-height: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 2px;
 }
 
@@ -944,4 +953,51 @@ body.is-desktop .product-card:hover {
   margin-top: -4px;
   margin-bottom: 2px;
   display: block;
+}
+
+
+.navline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.search {
+  min-width: 220px;
+  flex: 1 1 260px;
+}
+
+
+
+@media (max-width: 700px) {
+  .navline {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .search,
+  .cart-chip,
+  .quick-links,
+  .brand-block {
+    width: 100%;
+  }
+
+  .quick-links {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .quick-links a,
+  .brand-sub a {
+    font-size: .74rem;
+  }
+
+  .brand-track,
+  .photo-track,
+  .marquee-track {
+    min-width: 0;
+  }
 }
