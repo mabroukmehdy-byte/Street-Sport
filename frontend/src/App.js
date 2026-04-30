@@ -240,16 +240,19 @@ function CategoryExplorer({ data }) {
 }
 
 function ProductCard({ p, onOpen, onQuickAdd }) {
-  const discount = p.oldPrice ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100) : 0;
+  const priceNum = Number.parseFloat(String(p.price).replace(',', '.'));
+  const oldPriceNum = Number.parseFloat(String(p.oldPrice).replace(',', '.'));
+  const discount = Number.isFinite(priceNum) && Number.isFinite(oldPriceNum) && oldPriceNum > priceNum ? Math.round(((oldPriceNum - priceNum) / oldPriceNum) * 100) : 0;
+  const mainImage = (p.images && p.images.length ? p.images[0] : p.image) || '';
   const pretty = (v) => String(v || '').replaceAll('-', ' ').replace(/\b\w/g, (m) => m.toUpperCase());
   const meta = [p.brand, pretty(p.gender), pretty(p.category), p.subcategory ? pretty(p.subcategory) : null].filter(Boolean).join(' • ');
   return (
     <article className="product-card">
-      <button className="img-btn" onClick={() => onOpen(p)}><SafeImg src={p.image} alt={p.name} eager /></button>
+      <button className="img-btn" onClick={() => onOpen(p)}><SafeImg src={mainImage} alt={p.name} eager /></button>
       <div>
         <small>{meta}</small>
         <h3>{p.name}</h3>
-        <p><strong>{p.price} EUR</strong>{p.oldPrice ? <span className="old">{p.oldPrice} EUR</span> : null}{discount > 0 ? <span className="sale">-{discount}%</span> : null}</p>
+        <p><strong>{String(p.price)}</strong>{p.oldPrice ? <span className="old">{String(p.oldPrice)}</span> : null}{discount > 0 ? <span className="sale">-{discount}%</span> : null}</p>
         <div className="card-actions"><button onClick={() => onOpen(p)}>Voir</button><button onClick={() => onQuickAdd(p)}>Ajout rapide</button></div>
       </div>
     </article>
@@ -322,12 +325,22 @@ function Catalog({ products, onOpen, onQuickAdd }) {
 
 function ProductModal({ product, onClose, onAdd }) {
   const [size, setSize] = useState(product?.sizes?.[0] || 'Unique');
+  const [active, setActive] = useState(0);
+  useEffect(() => { setActive(0); }, [product?.id]);
   if (!product) return null;
+  const gallery = (product.images && product.images.length ? product.images : [product.image]).filter(Boolean);
   const pretty = (v) => String(v || '').replaceAll('-', ' ').replace(/\b\w/g, (m) => m.toUpperCase());
   return (
     <div className="admin-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <SafeImg src={product.image} alt={product.name} eager />
+        <div>
+          <SafeImg src={gallery[active] || ''} alt={product.name} eager />
+          {gallery.length > 1 ? (
+            <div className="hero-actions">
+              {gallery.map((img, i) => <button key={`${product.id}-img-${i}`} className={i === active ? 'btn' : 'btn ghost'} onClick={() => setActive(i)}>{i + 1}</button>)}
+            </div>
+          ) : null}
+        </div>
         <div>
           <small>{[product.brand, pretty(product.gender), pretty(product.category), product.subcategory ? pretty(product.subcategory) : null].filter(Boolean).join(' • ')}</small>
           <h3>{product.name}</h3>
@@ -665,8 +678,8 @@ function BackOffice({ open, onClose, data, setData }) {
               <div className="admin-card" key={p.id}>
                 <input value={p.name} onChange={(e) => updatePath(setData, ['products', i, 'name'], e.target.value)} placeholder="Nom produit" />
                 <input value={p.brand} onChange={(e) => updatePath(setData, ['products', i, 'brand'], e.target.value)} placeholder="Marque" />
-                <input type="number" value={p.price} onChange={(e) => updatePath(setData, ['products', i, 'price'], Number(e.target.value || 0))} placeholder="Prix" />
-                <input type="number" value={p.oldPrice || 0} onChange={(e) => updatePath(setData, ['products', i, 'oldPrice'], Number(e.target.value || 0) || null)} placeholder="Ancien prix" />
+                <input value={String(p.price ?? '')} onChange={(e) => updatePath(setData, ['products', i, 'price'], e.target.value)} placeholder="Prix (texte libre: 99 EUR, Promo, Sur devis...)" />
+                <input value={String(p.oldPrice ?? '')} onChange={(e) => updatePath(setData, ['products', i, 'oldPrice'], e.target.value)} placeholder="Ancien prix (texte libre)" />
                 <select value={p.category} onChange={(e) => updatePath(setData, ['products', i, 'category'], e.target.value)}>
                   {!productCategoryOptions.some((o) => o.value === p.category) ? <option value={p.category}>{p.category}</option> : null}
                   {productCategoryOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -686,10 +699,23 @@ function BackOffice({ open, onClose, data, setData }) {
                 </select>
                 <textarea rows={2} value={p.desc} onChange={(e) => updatePath(setData, ['products', i, 'desc'], e.target.value)} placeholder="Description" />
                 <input value={p.image} onChange={(e) => updatePath(setData, ['products', i, 'image'], e.target.value)} placeholder="URL image" />
+                <textarea rows={2} value={(p.images || []).join('\n')} onChange={(e) => {
+                  const imgs = e.target.value.split(/\n|,/).map((x) => x.trim()).filter(Boolean);
+                  updatePath(setData, ['products', i, 'images'], imgs);
+                  if (imgs[0]) updatePath(setData, ['products', i, 'image'], imgs[0]);
+                }} placeholder="URLs images (une par ligne)" />
                 <input value={p.sizes.join(',')} onChange={(e) => updatePath(setData, ['products', i, 'sizes'], e.target.value.split(',').map((x) => x.trim()).filter(Boolean))} placeholder="Tailles: 40,41,42" />
-                <label>Importer image<input type="file" accept="image/*" onChange={async (e) => {
-                  const f = e.target.files?.[0]; if (!f) return;
-                  const url = await fileToDataUrl(f); updatePath(setData, ['products', i, 'image'], url);
+                <label>Importer image(s)<input type="file" accept="image/*" multiple onChange={async (e) => {
+                  const files = Array.from(e.target.files || []);
+                  if (!files.length) return;
+                  const urls = await Promise.all(files.map((f) => fileToDataUrl(f)));
+                  setData((prev) => {
+                    const products = [...prev.products];
+                    const existing = products[i]?.images || (products[i]?.image ? [products[i].image] : []);
+                    const merged = [...existing, ...urls].filter(Boolean);
+                    products[i] = { ...products[i], images: merged, image: merged[0] || products[i].image };
+                    return { ...prev, products };
+                  });
                 }} /></label>
                 <button onClick={() => {
                   setData((prev) => ({ ...prev }));
@@ -707,13 +733,14 @@ function BackOffice({ open, onClose, data, setData }) {
                 name: 'Nouveau produit',
                 brand: 'Street Sport',
                 price: 0,
-                oldPrice: null,
+                oldPrice: '',
                 category: productCategoryFilter !== 'all' ? productCategoryFilter : (prev.categories[0]?.id || 'sneakers'),
                 gender: 'unisex',
                 sport: 'lifestyle',
                 subcategory: '',
                 isNew: true,
                 image: '',
+                images: [],
                 sizes: ['Unique'],
                 desc: 'Description',
               }],
@@ -765,10 +792,12 @@ export default function App() {
 
   const addToCart = (p, size = p.sizes?.[0] || 'Unique') => {
     const key = `${p.id}-${size}`;
+    const mainImage = (p.images && p.images.length ? p.images[0] : p.image) || '';
+    const priceNum = Number.parseFloat(String(p.price).replace(',', '.'));
     setCart((prev) => {
       const ex = prev.find((x) => x.key === key);
       if (ex) return prev.map((x) => x.key === key ? { ...x, qty: x.qty + 1 } : x);
-      return [...prev, { key, id: p.id, name: p.name, image: p.image, price: p.price, size, qty: 1 }];
+      return [...prev, { key, id: p.id, name: p.name, image: mainImage, price: Number.isFinite(priceNum) ? priceNum : 0, size, qty: 1 }];
     });
     setCartOpen(true);
   };
