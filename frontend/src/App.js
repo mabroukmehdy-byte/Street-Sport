@@ -9,22 +9,16 @@ const STORAGE_KEY = 'streetsport_nike_visual_bo_v1';
 const seedProducts = [
   { id: 'p1', name: 'Velocity Air One', brand: 'Street Sport', price: 129, oldPrice: 149, category: 'sneakers', gender: 'homme', sport: 'running', isNew: true, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80', sizes: ['40', '41', '42', '43', '44'], desc: 'Amorti réactif et empeigne respirante.' },
   { id: 'p2', name: 'Court Legacy Mid', brand: 'Street Sport', price: 119, oldPrice: null, category: 'sneakers', gender: 'femme', sport: 'lifestyle', isNew: true, image: 'https://images.unsplash.com/photo-1600269452121-4f2416e55c28?auto=format&fit=crop&w=900&q=80', sizes: ['37', '38', '39', '40', '41'], desc: 'Silhouette montante inspirée des classiques urbains.' },
-  { id: 'p3', name: 'Urban Sprint X', brand: 'Street Sport', price: 139, oldPrice: 169, category: 'sneakers', gender: 'homme', sport: 'training', isNew: false, image: 'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=900&q=80', sizes: ['40', '41', '42', '43', '44'], desc: 'Stabilité latérale pour les entraînements intenses.' },
+  { id: 'p3', name: 'Urban Sprint X', brand: 'Street Sport', price: 139, oldPrice: 169, category: 'sneakers', gender: 'homme', sport: 'basket', isNew: false, image: 'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=900&q=80', sizes: ['40', '41', '42', '43', '44'], desc: 'Stabilité latérale pour les entraînements intenses.' },
   { id: 'p4', name: 'Metro Runner Lite', brand: 'Street Sport', price: 99, oldPrice: null, category: 'sneakers', gender: 'femme', sport: 'running', isNew: false, image: 'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=900&q=80', sizes: ['36', '37', '38', '39', '40'], desc: 'Légèreté et dynamisme pour les runs quotidiens.' },
   { id: 'p5', name: 'Hoodie Core Oversize', brand: 'Street Sport', price: 79, oldPrice: 99, category: 'vetements', gender: 'homme', sport: 'lifestyle', isNew: true, image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80', sizes: ['S', 'M', 'L', 'XL'], desc: 'Coton épais, coupe ample, confort maximal.' },
   { id: 'p6', name: 'Tee Performance Dry', brand: 'Street Sport', price: 35, oldPrice: null, category: 'vetements', gender: 'femme', sport: 'training', isNew: true, image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=900&q=80', sizes: ['XS', 'S', 'M', 'L'], desc: 'Tissu léger anti-transpiration.' },
-  { id: 'p7', name: 'Pantalon Cargo Move', brand: 'Street Sport', price: 89, oldPrice: null, category: 'vetements', gender: 'homme', sport: 'lifestyle', isNew: false, image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=900&q=80', sizes: ['30', '32', '34', '36'], desc: 'Coupe droite et poches utilitaires.' },
+  { id: 'p7', name: 'Pantalon Cargo Move', brand: 'Street Sport', price: 89, oldPrice: null, category: 'vetements', gender: 'homme', sport: 'lifestyle', isNew: false, image: 'https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=900&q=80', sizes: ['30', '32', '34', '36'], desc: 'Coupe droite et poches utilitaires.' },
   { id: 'p8', name: 'Legging Studio Fit', brand: 'Street Sport', price: 59, oldPrice: null, category: 'vetements', gender: 'femme', sport: 'training', isNew: false, image: 'https://images.unsplash.com/photo-1506629905607-d9b1f073f201?auto=format&fit=crop&w=900&q=80', sizes: ['XS', 'S', 'M', 'L'], desc: 'Maintien ciblé et liberté de mouvement.' },
-  { id: 'p9', name: 'Veste Wind Urban', brand: 'Street Sport', price: 109, oldPrice: 129, category: 'vetements', gender: 'homme', sport: 'running', isNew: true, image: 'https://images.unsplash.com/photo-1548883354-94bcfe321cbb?auto=format&fit=crop&w=900&q=80', sizes: ['S', 'M', 'L', 'XL'], desc: 'Protection légère contre le vent.' },
+  { id: 'p9', name: 'Veste Wind Urban', brand: 'Street Sport', price: 109, oldPrice: 129, category: 'vetements', gender: 'femme', sport: 'running', isNew: true, image: 'https://images.unsplash.com/photo-1548883354-94bcfe321cbb?auto=format&fit=crop&w=900&q=80', sizes: ['S', 'M', 'L', 'XL'], desc: 'Protection légère contre le vent.' },
   { id: 'p10', name: 'Casquette Snap 75018', brand: 'Street Sport', price: 29, oldPrice: null, category: 'accessoires', gender: 'unisex', sport: 'lifestyle', isNew: false, image: 'https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=900&q=80', sizes: ['Unique'], desc: 'Broderie premium, ajustable.' },
   { id: 'p11', name: 'Sac Banane Tech', brand: 'Street Sport', price: 39, oldPrice: null, category: 'accessoires', gender: 'unisex', sport: 'lifestyle', isNew: true, image: 'https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=900&q=80', sizes: ['Unique'], desc: 'Format compact avec poche zippée.' },
-  { id: 'p12', name: 'Chaussettes Crew x3', brand: 'Street Sport', price: 19, oldPrice: null, category: 'accessoires', gender: 'unisex', sport: 'training', isNew: false, image: 'https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?auto=format&fit=crop&w=900&q=80', sizes: ['39-42', '43-46'], desc: 'Pack de 3, maintien de voûte.' },
-  { id: 'p13', name: 'Backpack Sport Daily', brand: 'Street Sport', price: 69, oldPrice: 79, category: 'accessoires', gender: 'unisex', sport: 'training', isNew: true, image: 'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?auto=format&fit=crop&w=900&q=80', sizes: ['Unique'], desc: 'Compartiments laptop et chaussures.' },
-  { id: 'p14', name: 'Bonnet Knit Season', brand: 'Street Sport', price: 25, oldPrice: null, category: 'accessoires', gender: 'unisex', sport: 'lifestyle', isNew: false, image: 'https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?auto=format&fit=crop&w=900&q=80', sizes: ['Unique'], desc: 'Maille épaisse et logo tissé.' },
-  { id: 'p15', name: 'Kids Flex Runner', brand: 'Street Sport', price: 69, oldPrice: null, category: 'sneakers', gender: 'enfant', sport: 'running', isNew: true, image: 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&w=900&q=80', sizes: ['31', '32', '33', '34', '35'], desc: 'Confort quotidien pour les jeunes sportifs.' },
-  { id: 'p16', name: 'Junior Hoodie Team', brand: 'Street Sport', price: 49, oldPrice: null, category: 'vetements', gender: 'enfant', sport: 'training', isNew: true, image: 'https://images.unsplash.com/photo-1503341733017-1901578f9f1e?auto=format&fit=crop&w=900&q=80', sizes: ['10A', '12A', '14A'], desc: 'Hoodie junior doux et résistant.' },
-  { id: 'p17', name: 'Track Jacket Club', brand: 'Street Sport', price: 95, oldPrice: null, category: 'vetements', gender: 'femme', sport: 'training', isNew: false, image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80', sizes: ['XS', 'S', 'M', 'L'], desc: 'Veste zippée inspirée des tracks rétro.' },
-  { id: 'p18', name: 'Street Slide Comfort', brand: 'Street Sport', price: 39, oldPrice: null, category: 'sneakers', gender: 'unisex', sport: 'lifestyle', isNew: false, image: 'https://images.unsplash.com/photo-1605034313761-73ea4a0cfbf3?auto=format&fit=crop&w=900&q=80', sizes: ['38', '39', '40', '41', '42', '43'], desc: 'Claquettes confort pour après-effort.' },
+  { id: 'p12', name: 'Backpack Sport Daily', brand: 'Street Sport', price: 69, oldPrice: 79, category: 'accessoires', gender: 'unisex', sport: 'training', isNew: true, image: 'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?auto=format&fit=crop&w=900&q=80', sizes: ['Unique'], desc: 'Compartiments laptop et chaussures.' },
 ];
 
 const defaultData = {
@@ -42,12 +36,43 @@ const defaultData = {
     sport: ['Running', 'Football', 'Basketball', 'Training', 'Tennis'],
   },
   categories: [
+    { id: 'homme', name: 'Homme', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80' },
+    { id: 'femme', name: 'Femme', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80' },
     { id: 'sneakers', name: 'Sneakers', image: 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=1200&q=80' },
-    { id: 'vetements', name: 'Vêtements', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80' },
-    { id: 'accessoires', name: 'Accessoires', image: 'https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=1200&q=80' },
   ],
   products: seedProducts,
 };
+
+function buildCategoryTree(products) {
+  return {
+    homme: {
+      title: 'Homme',
+      children: {
+        'Sneakers Homme': (p) => p.gender === 'homme' && p.category === 'sneakers',
+        'Survêtements & Hoodies': (p) => p.gender === 'homme' && p.category === 'vetements' && (p.name.toLowerCase().includes('hoodie') || p.name.toLowerCase().includes('sweat')),
+        Pantalons: (p) => p.gender === 'homme' && p.category === 'vetements' && p.name.toLowerCase().includes('pantalon'),
+        Casquettes: (p) => (p.gender === 'homme' || p.gender === 'unisex') && p.category === 'accessoires' && p.name.toLowerCase().includes('casquette'),
+      },
+    },
+    femme: {
+      title: 'Femme',
+      children: {
+        'Sneakers Femme': (p) => p.gender === 'femme' && p.category === 'sneakers',
+        Leggings: (p) => p.gender === 'femme' && p.category === 'vetements' && p.name.toLowerCase().includes('legging'),
+        Vestes: (p) => p.gender === 'femme' && p.category === 'vetements' && p.name.toLowerCase().includes('veste'),
+        'Tops & Tees': (p) => p.gender === 'femme' && p.category === 'vetements' && p.name.toLowerCase().includes('tee'),
+      },
+    },
+    sneakers: {
+      title: 'Sneakers',
+      children: {
+        Running: (p) => p.category === 'sneakers' && p.sport === 'running',
+        Basket: (p) => p.category === 'sneakers' && p.sport === 'basket',
+        Lifestyle: (p) => p.category === 'sneakers' && p.sport === 'lifestyle',
+      },
+    },
+  };
+}
 
 function useData() {
   const [data, setData] = useState(defaultData);
@@ -120,14 +145,45 @@ function Hero({ data }) {
   );
 }
 
-function CategoryTiles({ data }) {
+function CategoryExplorer({ data, onOpen, onQuickAdd }) {
+  const tree = useMemo(() => buildCategoryTree(data.products), [data.products]);
+  const [level1, setLevel1] = useState('homme');
+  const level2Keys = Object.keys(tree[level1].children);
+  const [level2, setLevel2] = useState(level2Keys[0]);
+
+  useEffect(() => {
+    const k = Object.keys(tree[level1].children);
+    setLevel2(k[0]);
+  }, [level1, tree]);
+
+  const products = data.products.filter(tree[level1].children[level2]);
+
   return (
     <section id="nouveautes" className="section">
-      <h2>Trouver ton style</h2>
-      <div className="looks-grid">
-        {data.categories.map((c) => (
-          <article key={c.id}><img src={c.image} alt={c.name} /><div><h3>{c.name}</h3><p>Voir la sélection</p></div></article>
-        ))}
+      <h2>Acheter par catégorie</h2>
+      <div className="explorer-layout">
+        <div className="explorer-level level-1">
+          {data.categories.map((c) => (
+            <button key={c.id} className={level1 === c.id ? 'active' : ''} onClick={() => setLevel1(c.id)}>
+              <img src={c.image} alt={c.name} />
+              <span>{c.name}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="explorer-level level-2">
+          <h3>{tree[level1].title}</h3>
+          {level2Keys.map((k) => (
+            <button key={k} className={level2 === k ? 'active' : ''} onClick={() => setLevel2(k)}>{k}</button>
+          ))}
+        </div>
+
+        <div className="explorer-level level-3">
+          <h3>{level2}</h3>
+          {products.length === 0 ? <p>Aucun article dans cette sous-catégorie.</p> : (
+            <div className="cards-3">{products.map((p) => <ProductCard key={p.id} p={p} onOpen={onOpen} onQuickAdd={onQuickAdd} />)}</div>
+          )}
+        </div>
       </div>
     </section>
   );
@@ -346,12 +402,12 @@ export default function App() {
     <main>
       <Header data={data} cartCount={cartCount} onOpenCart={() => setCartOpen(true)} />
       <Hero data={data} />
-      <CategoryTiles data={data} />
+      <CategoryExplorer data={data} onOpen={openProduct} onQuickAdd={addToCart} />
       <Catalog products={data.products} onOpen={openProduct} onQuickAdd={addToCart} />
       <SmartRecommendations viewed={viewed} all={data.products} onOpen={openProduct} onQuickAdd={addToCart} />
       <Footer data={data} />
 
-      <button className="admin-fab" onClick={() => setAdminOpen(true)}>Back Office</button>
+      <div className="admin-end-wrap"><button className="admin-fab" onClick={() => setAdminOpen(true)}>Back Office</button></div>
 
       <ProductModal product={selected} onClose={() => setSelected(null)} onAdd={addToCart} />
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} setCart={setCart} />
