@@ -948,9 +948,9 @@ body.is-desktop .product-card:hover {
 .logo-highlight {
   display: grid;
   place-items: center;
-  min-height: 130px;
+  min-height: 154px;
   background: #fff;
-  padding: 6px;
+  padding: 8px;
 }
 
 .logo-highlight img {
@@ -992,7 +992,7 @@ body.is-desktop .product-card:hover {
   font-family: Anton, sans-serif;
   color: #fff;
   letter-spacing: .04em;
-  font-size: clamp(2rem, 9vw, 5rem);
+  font-size: clamp(2.2rem, 10vw, 5.4rem);
   line-height: 1;
   display: flex;
   align-items: center;
@@ -1012,7 +1012,7 @@ body.is-desktop .product-card:hover {
   text-align: center;
   font-family: Anton, sans-serif;
   letter-spacing: .07em;
-  font-size: clamp(1.05rem, 3.8vw, 2.05rem);
+  font-size: clamp(1.15rem, 4.2vw, 2.2rem);
 }
 
 .promo-row {
