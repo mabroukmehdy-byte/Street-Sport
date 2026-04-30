@@ -267,19 +267,26 @@ function CategoryExplorer({ data }) {
 }
 
 function ProductCard({ p, onOpen, onQuickAdd }) {
-  const priceNum = Number.parseFloat(String(p.price).replace(',', '.'));
-  const oldPriceNum = Number.parseFloat(String(p.oldPrice).replace(',', '.'));
+  const toAmount = (v) => {
+    const m = String(v ?? '').replace(',', '.').match(/-?\d+(\.\d+)?/);
+    return m ? Number.parseFloat(m[0]) : Number.NaN;
+  };
+  const priceNum = toAmount(p.price);
+  const oldPriceNum = toAmount(p.oldPrice);
   const discount = Number.isFinite(priceNum) && Number.isFinite(oldPriceNum) && oldPriceNum > priceNum ? Math.round(((oldPriceNum - priceNum) / oldPriceNum) * 100) : 0;
   const mainImage = (p.images && p.images.length ? p.images[0] : p.image) || '';
   const pretty = (v) => String(v || '').replaceAll('-', ' ').replace(/\b\w/g, (m) => m.toUpperCase());
   const meta = [p.brand, pretty(p.gender), pretty(p.category), p.subcategory ? pretty(p.subcategory) : null].filter(Boolean).join(' • ');
   return (
     <article className="product-card">
-      <button className="img-btn" onClick={() => onOpen(p)}><SafeImg src={mainImage} alt={p.name} eager /></button>
+      <button className="img-btn" onClick={() => onOpen(p)}>
+        <SafeImg src={mainImage} alt={p.name} eager />
+        {discount > 0 ? <span className="promo-ribbon">PROMO - {discount}%</span> : null}
+      </button>
       <div>
         <small>{meta}</small>
         <h3>{p.name}</h3>
-        <p><strong>{String(p.price)}</strong>{p.oldPrice ? <span className="old">{String(p.oldPrice)}</span> : null}{discount > 0 ? <span className="sale"> (-{discount}%)</span> : null}</p>
+        <p><strong>{String(p.price)}</strong>{p.oldPrice ? <span className="old">{String(p.oldPrice)}</span> : null}</p>
         <div className="card-actions"><button onClick={() => onOpen(p)}>Voir</button><button onClick={() => onQuickAdd(p)}>Ajout rapide</button></div>
       </div>
     </article>
