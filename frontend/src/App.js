@@ -509,6 +509,26 @@ function BackOffice({ open, onClose, data, setData }) {
   const [newCategoryImage, setNewCategoryImage] = useState('');
   const [productCategoryFilter, setProductCategoryFilter] = useState('all');
   const slugify = (v) => String(v || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const productCategoryOptions = useMemo(() => {
+    const top = (data.categories || []).map((c) => ({ value: c.id, label: c.name }));
+    const fromNav = Object.entries(data.nav || {}).flatMap(([parent, children]) =>
+      (children || []).map((child) => {
+        const parentId = slugify(parent);
+        const childId = slugify(child);
+        return {
+          value: `${parentId}/${childId}`,
+          label: `${parent.charAt(0).toUpperCase() + parent.slice(1)} > ${child}`,
+        };
+      }),
+    );
+    const merged = [...top, ...fromNav];
+    const seen = new Set();
+    return merged.filter((o) => {
+      if (!o.value || seen.has(o.value)) return false;
+      seen.add(o.value);
+      return true;
+    });
+  }, [data.categories, data.nav]);
   if (!open) return null;
   return (
     <div className="admin-overlay" onClick={onClose}>
@@ -622,7 +642,8 @@ function BackOffice({ open, onClose, data, setData }) {
                 <input type="number" value={p.price} onChange={(e) => updatePath(setData, ['products', i, 'price'], Number(e.target.value || 0))} placeholder="Prix" />
                 <input type="number" value={p.oldPrice || 0} onChange={(e) => updatePath(setData, ['products', i, 'oldPrice'], Number(e.target.value || 0) || null)} placeholder="Ancien prix" />
                 <select value={p.category} onChange={(e) => updatePath(setData, ['products', i, 'category'], e.target.value)}>
-                  {data.categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  {!productCategoryOptions.some((o) => o.value === p.category) ? <option value={p.category}>{p.category}</option> : null}
+                  {productCategoryOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                 </select>
                 <input value={p.gender} onChange={(e) => updatePath(setData, ['products', i, 'gender'], e.target.value)} placeholder="Genre" />
                 <input value={p.sport} onChange={(e) => updatePath(setData, ['products', i, 'sport'], e.target.value)} placeholder="Sport" />
